@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Isso aqui é o que impede de um lado ficar "gordo" */
+}
+
+:root {
+    --fundo-principal: #1A1A1A;
+    --cards-e-tabelas: #2D2D2D;
+    --botao-e-icone: #E37D22;
+    --textos: #F5F5F5;
+    --bordas: #8B4513;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000; /* Cor de fundo caso a imagem demore a carregar */
+    overflow: hidden;
+}
+
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; /* Fica atrás de tudo */
+    object-fit: cover; /* Faz o vídeo preencher a tela sem esticar */
+    
+    /* AQUI VOCÊ CONTROLA A TRANSPARÊNCIA */
+    opacity: 0.4; 
+    
+    /* Deixa o fundo levemente embaçado para dar foco ao formulário */
+    filter: blur(2px) brightness(0.6);
+}
+
+.login-area {
+    background-color: var(--cards-e-tabelas);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--bordas);
+    
+    /* 1. Define o tamanho fixo do card */
+    width: 350px;
+    height: 550px;
+    
+    /* 2. Transforma o card em um container Flex */
+    display: flex;
+    flex-direction: column;   /* Empilha os itens (logo, título, inputs) um embaixo do outro */
+    align-items: center;      /* Centraliza tudo HORIZONTALMENTE */
+    justify-content: center;  /* Centraliza tudo VERTICALMENTE dentro dos 600px */
+    
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.login-area img {
+    /* 3. Ajusta o tamanho da imagem */
+    width: 150px; 
+    height: auto;
+    
+    /* 4. Garante que ela não tenha margens laterais automáticas que atrapalhem */
+    display: block; 
+    margin: 0 auto 1rem auto; /* 0 em cima, auto nas laterais, 1.5rem embaixo */
+}
+
+.login-area h2 {
+    color: var(--textos);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.form-group label {
+    color: #CCC; /* Um cinza claro para o label não brigar com o título */
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    margin-top: 1rem;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #444;
+    background-color: #1A1A1A; /* Fundo escuro no input fica mais moderno */
+    color: white;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--botao-e-icone);
+    box-shadow: 0 0 10px rgba(227, 125, 34, 0.2);
+    outline: none;
+}
+
+button {
+    background-color: var(--botao-e-icone);
+    color: white;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px); /* Efeito de levante no botão */
+}
+
+.login-helper{
+    margin-top: 25px;
+}
+
+.login-helper a {
+    color: var(--botao-e-icone);
+    opacity: 0.8;
+    font-size: 0.85rem;
+}
+
+.login-helper a:hover {
+    opacity: 1;
+}
+
+.login-helper p{
+    color: var(--textos);
+}
+
+@media (max-width: 480px) {
+    .login-area {
+        width: 90%;
+        padding: 2rem;
+    }
+}
