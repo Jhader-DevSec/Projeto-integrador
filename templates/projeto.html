@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login_page.css') }}">
     <title>Espetinho do Edir</title>
+    {% if session['usuario_logado'] == 'admin@brasas.com' %}
+    <a href="{{ url_for('admin_panel') }}" class="btn-admin">Painel Admin</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}" class="btn-sair">Sair do Sistema</a>
+    <a href="{{ url_for('logout') }}">Sair do Sistema</a>
 </head>
 <body>
     <!--cabeçalho do site-->
