@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Administrativo - Brasas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/projeto.css') }}">
+</head>
+<body>
+
+    <header>
+        <h1>Painel de Controle - Administrador</h1>
+        <a href="{{ url_for('index') }}" class="btn">Voltar ao Projeto</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-sair">Sair do Sistema</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mensagens">
+        {% for category, message in messages %}
+          <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main>
+        <section class="cadastro-admin">
+            <h2>Criar Novo Usuário</h2>
+            <form action="{{ url_for('admin_criar') }}" method="POST">
+                <input type="email" name="email" placeholder="E-mail do novo usuário" required>
+                <input type="password" name="senha" placeholder="Senha inicial" required>
+                <button type="submit">Cadastrar Usuário</button>
+            </form>
+        </section>
+
+        <section class="lista-usuarios">
+            <h2>Usuários Ativos no Sistema</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>E-mail (Login)</th>
+                        <th>Senha (Simulada)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email, senha in usuarios.items() %}
+                    <tr>
+                        <td>{{ email }}</td>
+                        <td>{{ senha }}</td>
+                        <td>
+                            {% if email == 'admin@brasas.com' %}
+                                <span class="tag-admin">Super Admin</span>
+                            {% else %}
+                                <a href="{{ url_for('admin_deletar', email=email) }}" class="btn-deletar" onclick="return confirm('Tem certeza que deseja excluir {{ email }}?')">Excluir</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+</body>
+</html>
