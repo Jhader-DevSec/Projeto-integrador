@@ -15,12 +15,14 @@
             <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo da Empresa">
             
             <h2>Entrar no Sistema</h2>
-            
-            {% with messages = get_flashed_messages() %}
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
-                {% for message in messages %}
-                  <p style="color: red; font-weight: bold; text-align: center;">{{ message }}</p>
+                <div class="alertas">
+                {% for category, message in messages %}
+                  <p class="alerta {{ category }}">{{ message }}</p>
                 {% endfor %}
+                </div>
               {% endif %}
             {% endwith %}
             <form action="/autenticar" method="POST">
