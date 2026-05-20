@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+# ===================================================
+# 1. CONFIGURAÇÕES E INICIALIZAÇÃO DO APP
+# ===================================================
 app = Flask(__name__)
 app.secret_key = 'chave_super_secreta_do_projeto' 
 
@@ -12,22 +15,26 @@ limiter = Limiter(
     default_limits=["200 per day", "50 per hour"] # Limite de segurança geral para o site todo
 )
 
-# CHAVE SECRETA: Necessária para o Flask conseguir gerenciar o login do usuário com segurança
+# CHAVE SECRETA: Necessária para o Flask gerenciar as sessões de login com segurança
 app.secret_key = 'chave_super_secreta_para_a_faculdade'
 
-# --- NOSSO "BANCO DE DADOS" EM MEMÓRIA ---
-# Adicionamos o admin padrão e um usuário comum para você testar na apresentação
+
+# ===================================================
+# 2. "BANCO DE DADOS" EM MEMÓRIA
+# ===================================================
 usuarios_fake = {
     "admin@brasas.com": "senha123",
     "teste@brasas.com": "123456"
 }
-# ----------------------------------------------
 
 
-# 1. ROTA DA TELA DE LOGIN
+# ===================================================
+# 3. BLOCO DE AUTENTICAÇÃO (Login, Validação e Sair)
+# ===================================================
+
 @app.route('/login')
 def login_page():
-    # Se já estiver logado, não deixa ir pra tela de login, manda direto pro sistema
+    # Se já estiver logado, não deixa ir pra tela de login, manda direto pro lugar certo
     if 'usuario_logado' in session:
         if session['usuario_logado'] == 'admin@brasas.com':
             return redirect(url_for('admin_panel'))
@@ -36,42 +43,25 @@ def login_page():
     return render_template('login_page.html')
 
 
-# 2. ROTA DE AUTENTICAÇÃO (Onde o formulário do HTML bate)
 @app.route('/autenticar', methods=['POST'])
 def autenticar():
     email = request.form.get('email')
-    senha = request.form.get('password') # Busca exatamente o name="password" do seu HTML
+    senha = request.form.get('password') # Busca o name="password" do HTML
 
-    # Verifica se o email e a senha estão corretos no nosso dicionário
+    # Verifica se o email e a senha batem com o nosso dicionário
     if email in usuarios_fake and usuarios_fake[email] == senha:
-        # Salva o usuário na sessão do Flask
         session['usuario_logado'] = email
         
-        # Se for o administrador, vai para a aba do admin
+        # Divisão de águas: Admin vai para o painel, usuário comum vai para as vendas
         if email == 'admin@brasas.com':
             return redirect(url_for('admin_panel'))
             
-        # Se for um usuário normal, vai para a página do projeto
         return redirect(url_for('index'))
     else:
-        # Se errar, mostra a mensagem na tela e volta pro login
         flash('E-mail ou senha incorretos!', 'erro')
         return redirect(url_for('login_page'))
 
 
-# 3. ROTA PRINCIPAL DO PROJETO (Protegida)
-@app.route('/')
-def index():
-    # Se não fez login, barra o acesso
-    if 'usuario_logado' not in session:
-        flash('Por favor, faça o login para acessar o sistema.', 'erro')
-        return redirect(url_for('login_page'))
-    
-    # Se passou, carrega a página do projeto da barraca
-    return render_template('projeto.html')
-
-
-# 4. ROTA DE SAIR DO SISTEMA
 @app.route('/logout')
 def logout():
     session.pop('usuario_logado', None)
@@ -79,14 +69,30 @@ def logout():
     return redirect(url_for('login_page'))
 
 
-# --- ROTAS DO PAINEL ADMINISTRATIVO ---
+# ===================================================
+# 4. BLOCO OPERACIONAL (O Core do App / Tela de Vendas)
+# ===================================================
 
-# 5. ABRIR O PAINEL DO ADMIN
+@app.route('/')
+def index():
+    # Barreira de Segurança: Se não fez login, é chutado de volta para a tela de login
+    if 'usuario_logado' not in session:
+        flash('Por favor, faça o login para acessar o sistema.', 'erro')
+        return redirect(url_for('login_page'))
+    
+    # Se a sessão estiver ativa, carrega o painel principal com o efeito de slide
+    return render_template('projeto.html')
+
+
+# ===================================================
+# 5. BLOCO ADMINISTRATIVO (Gestão de Usuários)
+# ===================================================
+
 @app.route('/admin')
 def admin_panel():
     usuario_atual = session.get('usuario_logado')
     
-    # Barreira de Segurança: só o admin entra
+    # Barreira de Segurança do Admin: só o e-mail master entra aqui
     if usuario_atual != 'admin@brasas.com':
         flash('Acesso negado! Área restrita para administradores.', 'erro')
         return redirect(url_for('index'))
@@ -94,7 +100,6 @@ def admin_panel():
     return render_template('admin_page.html', usuarios=usuarios_fake)
 
 
-# 6. CRIAR USUÁRIO PELO PAINEL
 @app.route('/admin/criar', methods=['POST'])
 def admin_criar():
     if session.get('usuario_logado') != 'admin@brasas.com':
@@ -112,7 +117,6 @@ def admin_criar():
     return redirect(url_for('admin_panel'))
 
 
-# 7. DELETAR USUÁRIO PELO PAINEL
 @app.route('/admin/deletar/<email>')
 def admin_deletar(email):
     if session.get('usuario_logado') != 'admin@brasas.com':
@@ -127,6 +131,8 @@ def admin_deletar(email):
     return redirect(url_for('admin_panel'))
 
 
-# Roda o servidor
+# ===================================================
+# 6. EXECUÇÃO DO SERVIDOR LOCAL
+# ===================================================
 if __name__ == '__main__':
     app.run(debug=True)
