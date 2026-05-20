@@ -1,46 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Administrativo - Brasas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Brasas</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/projeto.css') }}">
+    <style>
+        /* Um CSS básico só para a tabela do admin não ficar bagunçada */
+        .admin-container { max-width: 800px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 8px; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+        .btn-sair { background: #ff4444; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
+        .mensagens { color: red; font-weight: bold; margin-bottom: 15px; }
+    </style>
 </head>
 <body>
+    <div class="admin-container">
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Painel de Controle</h1>
+            <a href="{{ url_for('logout') }}" class="btn-sair">Sair do Sistema</a>
+        </header>
 
-    <header>
-        <h1>Painel de Controle - Administrador</h1>
-        <a href="{{ url_for('index') }}" class="btn">Voltar ao Projeto</a>
-        <a href="{{ url_for('logout') }}" class="btn btn-sair">Sair do Sistema</a>
-    </header>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="mensagens">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="mensagens">
-        {% for category, message in messages %}
-          <p class="{{ category }}">{{ message }}</p>
-        {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
-    <main>
-        <section class="cadastro-admin">
+        <section>
             <h2>Criar Novo Usuário</h2>
-            <form action="{{ url_for('admin_criar') }}" method="POST">
-                <input type="email" name="email" placeholder="E-mail do novo usuário" required>
-                <input type="password" name="senha" placeholder="Senha inicial" required>
-                <button type="submit">Cadastrar Usuário</button>
+            <form action="{{ url_for('admin_criar') }}" method="POST" style="margin-bottom: 30px;">
+                <input type="email" name="email" placeholder="E-mail" required>
+                <input type="text" name="senha" placeholder="Senha" required>
+                <button type="submit">Cadastrar</button>
             </form>
         </section>
 
-        <section class="lista-usuarios">
-            <h2>Usuários Ativos no Sistema</h2>
-            <table border="1">
+        <section>
+            <h2>Usuários Cadastrados</h2>
+            <table>
                 <thead>
                     <tr>
-                        <th>E-mail (Login)</th>
-                        <th>Senha (Simulada)</th>
-                        <th>Ações</th>
+                        <th>E-mail</th>
+                        <th>Senha</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,9 +57,9 @@
                         <td>{{ senha }}</td>
                         <td>
                             {% if email == 'admin@brasas.com' %}
-                                <span class="tag-admin">Super Admin</span>
+                                Super Admin
                             {% else %}
-                                <a href="{{ url_for('admin_deletar', email=email) }}" class="btn-deletar" onclick="return confirm('Tem certeza que deseja excluir {{ email }}?')">Excluir</a>
+                                <a href="{{ url_for('admin_deletar', email=email) }}" style="color: red;">Excluir</a>
                             {% endif %}
                         </td>
                     </tr>
@@ -60,7 +67,6 @@
                 </tbody>
             </table>
         </section>
-    </main>
-
+    </div>
 </body>
 </html>
