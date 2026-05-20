@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="/css/projeto.css">
     <script src="/js/projeto.js"></script>
     <title>Espetinho do Edir</title>
+    {% if session['usuario_logado'] == 'admin@brasas.com' %}
+    <a href="{{ url_for('admin_panel') }}" class="btn-admin">Painel Admin</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}" class="btn-sair">Sair do Sistema</a>
     <a href="{{ url_for('logout') }}">Sair do Sistema</a>
 </head>
 <body>
