@@ -16,13 +16,6 @@
             
             <h2>Entrar no Sistema</h2>
             
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <p style="color: red; font-weight: bold; text-align: center;">{{ message }}</p>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
             <form action="/autenticar" method="POST">
                 <div class="form-group">
                     <label for="email">E-mail:</label>
@@ -52,7 +45,7 @@
             </form>
 
             <nav class="login-helper">
-                <p>Esqueceu a senha? <a href="{{ url_for('recuperar_senha') }}">Clique aqui</a></p>
+                <p>Esqueceu a senha? <a href="recuperar.html">Clique aqui</a></p>
             </nav>
         </section>
     </main>
