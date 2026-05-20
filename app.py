@@ -1,9 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # ===================================================
 # 1. CONFIGURAÇÕES E INICIALIZAÇÃO DO APP
 # ===================================================
 app = Flask(__name__)
+app.secret_key = 'chave_super_secreta_do_projeto' 
+
+# 1. Configurando o sistema de limite (rastreando pelo IP do usuário)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"] # Limite de segurança geral para o site todo
+)
 
 # CHAVE SECRETA: Necessária para o Flask gerenciar as sessões de login com segurança
 app.secret_key = 'chave_super_secreta_para_a_faculdade'

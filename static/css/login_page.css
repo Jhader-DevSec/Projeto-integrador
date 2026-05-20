@@ -43,13 +43,14 @@ body {
 
 .login-area {
     background-color: var(--cards-e-tabelas);
-    padding: 2rem;
+    padding: 40px 30px;
     border-radius: 16px;
     border: 1px solid var(--bordas);
     
     /* 1. Define o tamanho fixo do card */
     width: 350px;
-    height: 550px;
+    min-height: 350px;
+    height: auto;
     
     /* 2. Transforma o card em um container Flex */
     display: flex;
