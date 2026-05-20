@@ -6,17 +6,14 @@ from flask_limiter.util import get_remote_address
 # 1. CONFIGURAÇÕES E INICIALIZAÇÃO DO APP
 # ===================================================
 app = Flask(__name__)
-app.secret_key = 'chave_super_secreta_do_projeto' 
+app.secret_key = 'chave_super_secreta_para_a_faculdade'
 
-# 1. Configurando o sistema de limite (rastreando pelo IP do usuário)
+# Configurando o sistema de limite (rastreando pelo IP do usuário)
 limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["200 per day", "50 per hour"] # Limite de segurança geral para o site todo
 )
-
-# CHAVE SECRETA: Necessária para o Flask gerenciar as sessões de login com segurança
-app.secret_key = 'chave_super_secreta_para_a_faculdade'
 
 
 # ===================================================
@@ -60,6 +57,12 @@ def autenticar():
     else:
         flash('E-mail ou senha incorretos!', 'erro')
         return redirect(url_for('login_page'))
+
+
+# ROTA ADICIONADA: Resolve o BuildError do link 'recuperar_senha' adicionado no HTML
+@app.route('/recuperar-senha')
+def recuperar_senha():
+    return "<h3>Página de recuperação de senha em desenvolvimento... 🔥</h3>"
 
 
 @app.route('/logout')
