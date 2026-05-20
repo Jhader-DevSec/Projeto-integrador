@@ -19,13 +19,13 @@
    2. O CHÃO DO SISTEMA (O comportamento de Aplicativo)
    =================================================== */
 body {
-    height: 100vh; /* Trava o aplicativo para ocupar exatamente a altura da tela do PC */
+    height: 100vh;
     background-color: var(--fundo-principal);
     color: var(--textos);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
-    flex-direction: column; /* Empilha o Header e o Main perfeitamente */
-    overflow: hidden; /* Impede que o navegador crie barras de rolagem doidas nas laterais */
+    flex-direction: column;
+    overflow: hidden;
 }
 
 /* ===================================================
@@ -33,15 +33,13 @@ body {
    =================================================== */
 header {
     background-color: var(--cards-e-tabelas);
-    /* Removeu-se a altura fixa de 70px para que as duas linhas caibam com folga */
     display: flex;
-    flex-direction: column; /* Faz a linha da logo ficar em cima e o nav embaixo */
-    border-bottom: 2px solid var(--bordas); /* Linha amadeirada sutil embaixo do menu */
+    flex-direction: column;
+    border-bottom: 2px solid var(--bordas);
     padding: 15px 20px 10px 20px;
-    gap: 15px; /* Distância padrão entre a linha da logo e a linha das abas */
+    gap: 15px;
 }
 
-/* 1ª Linha: Garante que a logo fique na esquerda e o botão sair vá para a extrema direita */
 .header-top {
     display: flex;
     justify-content: space-between; 
@@ -49,15 +47,14 @@ header {
     width: 100%;
 }
 
-/* Força a imagem da logo e o texto H1 a sentarem lado a lado horizontalmente */
 .logo-title {
     display: flex;
     align-items: center;
-    gap: 12px; /* Espaço entre a imagem redonda e o texto */
+    gap: 12px;
 }
 
 .logo-title img {
-    height: 40px; /* Define um tamanho controlado e discreto para a logo no cabeçalho */
+    height: 40px;
     width: auto;
 }
 
@@ -67,12 +64,37 @@ header {
     font-weight: 600;
 }
 
-/* Estilização elegante para o link de deslogar */
+/* Container das ações do topo direito */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Botão do Painel Admin */
+.btn-admin {
+    color: var(--textos);
+    text-decoration: none;
+    font-size: 0.95rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--botao-e-icone); /* Borda laranja brasa */
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-admin:hover {
+    background-color: var(--botao-e-icone);
+    color: white;
+}
+
+/* Botão Sair */
 .btn-logout {
     color: var(--textos);
     text-decoration: none;
     font-size: 0.95rem;
-    background-color: rgba(255, 255, 255, 0.05); /* Um fundo sutil para parecer um botão limpo */
+    background-color: rgba(255, 255, 255, 0.05);
     padding: 8px 16px;
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -80,76 +102,67 @@ header {
 }
 
 .btn-logout:hover {
-    background-color: #721c24; /* Tom avermelhado sutil ao passar o mouse (padrão de segurança para "Sair") */
+    background-color: #721c24;
     border-color: #f5c6cb;
 }
 
-/* 2ª Linha: O menu de abas distribuído uniformemente */
+/* Menu de Abas */
 nav {
     display: flex;
     width: 100%;
-    justify-content: space-around; /* Distribui as abas de forma simétrica */
-    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Divisória horizontal interna sutil */
+    justify-content: space-around;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 10px;
 }
 
 nav a {
     color: var(--textos);
-    text-decoration: none; /* Remove o sublinhado padrão */
+    text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
     padding: 6px 20px;
     transition: color 0.3s ease;
 }
 
-/* Feedback visual: Quando o mouse passa por cima, a aba acende no seu laranja original */
 nav a:hover {
     color: var(--botao-e-icone);
 }
 
 /* ===================================================
-   4. A JANELA VISÍVEL (O espaço do conteúdo)
+   4. A JANELA VISÍVEL E O TRILHO
    =================================================== */
 main {
-    flex: 1; /* Faz o conteúdo ocupar todo o espaço restante abaixo do cabeçalho */
+    flex: 1;
     width: 100vw;
-    overflow: hidden; /* MÁGICA: O que passar dos limites do <main> fica totalmente invisível */
+    overflow: hidden;
     position: relative;
 }
 
-/* ===================================================
-   5. O TRILHO / TREM (O bloco que vai deslizar)
-   =================================================== */
 .rail {
-    display: flex; /* Força os vagões (sections) a se alinharem um ao lado do outro horizontalmente */
-    width: 400%; /* Como você tem 4 seções, o trem precisa de 4 vezes o tamanho da tela (400%) */
+    display: flex;
+    width: 400%;
     height: 100%;
-    transition: transform 0.5s ease-in-out; /* Controla a velocidade e suavidade do slide */
+    transition: transform 0.5s ease-in-out;
 }
 
-/* ===================================================
-   6. OS VAGÕES (As 4 telas do sistema)
-   =================================================== */
 .rail section {
-    width: 100vw; /* Cada tela assume exatamente a largura de uma janela cheia */
+    width: 100vw;
     height: 100%;
     padding: 30px;
     background-color: var(--fundo-principal);
-    
-    /* Configuração extra para controle de posicionamento interno de cada aba */
     display: flex;
     flex-direction: column;
 }
 
 /* ===================================================
-   7. O RODAPÉ DA TELA DE VENDAS (Menu Inferior)
+   5. O RODAPÉ DA TELA DE VENDAS
    =================================================== */
 .barra_informacao {
-    margin-top: auto; /* Truque do Flexbox: Empurra a barra sempre para o fundo da tela de vendas */
+    margin-top: auto;
     background-color: var(--cards-e-tabelas);
     border: 1px solid var(--bordas);
     border-radius: 12px;
     width: 100%;
-    height: 100px; /* Altura da sua barra de totais e botões de envio */
+    height: 100px;
     padding: 20px;
 }
