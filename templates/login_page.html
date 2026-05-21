@@ -20,12 +20,13 @@
               {% if messages %}
                 <div class="alertas">
                 {% for category, message in messages %}
-                  <p class="alerta {{ category }}">{{ message }}</p>
+                  <p class="alerta {{ category }}" style="color: #ff4444; font-weight: bold; margin-bottom: 15px;">⚠️ {{ message }}</p>
                 {% endfor %}
                 </div>
               {% endif %}
             {% endwith %}
-            <form action="{{ url_for('auth.autenticar') }}" method="POST">
+            
+            <form action="/autenticar" method="POST">
                 <div class="form-group">
                     <label for="email">E-mail:</label>
                     <input 
