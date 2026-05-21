@@ -19,6 +19,9 @@
     </style>
 </head>
 <body>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="{{ url_for('static', filename='mp4/brasas_video.mp4') }}" type="video/mp4">
+    </video>
     <div class="admin-container">
         <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
             <h1>Painel de Controle (Gerente)</h1>
@@ -30,7 +33,7 @@
 
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            <div class="mensagens">
+            <div class="mensagens" style="color: #E37D22; font-weight: bold; margin-bottom: 15px;">
             {% for message in messages %}
               <p>⚠️ {{ message }}</p>
             {% endfor %}

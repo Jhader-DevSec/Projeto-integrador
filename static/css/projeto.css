@@ -1,0 +1,168 @@
+/* ===================================================
+   1. O RESET E SUAS VARIÁVEIS DE COR ORIGINAIS
+   =================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fundo-principal: #1A1A1A;
+    --cards-e-tabelas: #2D2D2D;
+    --botao-e-icone: #E37D22;
+    --textos: #F5F5F5;
+    --bordas: #8B4513;
+}
+
+/* ===================================================
+   2. O CHÃO DO SISTEMA (O comportamento de Aplicativo)
+   =================================================== */
+body {
+    height: 100vh;
+    background-color: var(--fundo-principal);
+    color: var(--textos);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ===================================================
+   3. O TOPO FIXO (A Barra de Navegação de Duas Linhas)
+   =================================================== */
+header {
+    background-color: var(--cards-e-tabelas);
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid var(--bordas);
+    padding: 15px 20px 10px 20px;
+    gap: 15px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-title img {
+    height: 40px;
+    width: auto;
+}
+
+.logo-title h1 {
+    font-size: 1.4rem;
+    color: var(--textos);
+    font-weight: 600;
+}
+
+/* Container das ações do topo direito */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Botão do Painel Admin */
+.btn-admin {
+    color: var(--textos);
+    text-decoration: none;
+    font-size: 0.95rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--botao-e-icone); /* Borda laranja brasa */
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-admin:hover {
+    background-color: var(--botao-e-icone);
+    color: white;
+}
+
+/* Botão Sair */
+.btn-logout {
+    color: var(--textos);
+    text-decoration: none;
+    font-size: 0.95rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background-color: #721c24;
+    border-color: #f5c6cb;
+}
+
+/* Menu de Abas */
+nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+}
+
+nav a {
+    color: var(--textos);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 6px 20px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--botao-e-icone);
+}
+
+/* ===================================================
+   4. A JANELA VISÍVEL E O TRILHO
+   =================================================== */
+main {
+    flex: 1;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+}
+
+.rail {
+    display: flex;
+    width: 400%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.rail section {
+    width: 100vw;
+    height: 100%;
+    padding: 30px;
+    background-color: var(--fundo-principal);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===================================================
+   5. O RODAPÉ DA TELA DE VENDAS
+   =================================================== */
+.barra_informacao {
+    margin-top: auto;
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid var(--bordas);
+    border-radius: 12px;
+    width: 100%;
+    height: 100px;
+    padding: 20px;
+}

@@ -1,0 +1,164 @@
+/* ===================================================
+   ESTILOS PARA O PAINEL DE GESTÃO (ADMINISTRADOR)
+   =================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fundo-principal: #1A1A1A;
+    --cards-e-tabelas: #2D2D2D;
+    --botao-e-icone: #E37D22;
+    --textos: #F5F5F5;
+    --bordas: #8B4513;
+    --perigo: #C0392B; /* Vermelho escuro para ações de deletar */
+}
+
+body {
+    background-color: var(--fundo-principal);
+    color: var(--textos);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; /* Fica atrás de tudo */
+    object-fit: cover; /* Faz o vídeo preencher a tela sem esticar */
+    
+    /* AQUI VOCÊ CONTROLA A TRANSPARÊNCIA */
+    opacity: 0.4; 
+    
+    /* Deixa o fundo levemente embaçado para dar foco ao formulário */
+    filter: blur(2px) brightness(0.6);
+}
+
+/* Container mestre do painel */
+.admin-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid var(--bordas);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+/* Títulos do painel */
+h1, h2 {
+    color: var(--textos);
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+h2 {
+    margin-top: 40px;
+}
+
+/* Link para o Admin conseguir voltar para a tela de vendas */
+.btn-voltar {
+    display: inline-block;
+    color: var(--botao-e-icone);
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 25px;
+    transition: opacity 0.2s;
+}
+
+.btn-voltar:hover {
+    opacity: 0.8;
+}
+
+/* Formulário de criar novos usuários */
+.admin-form {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.admin-form input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px;
+    background-color: var(--fundo-principal);
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: white;
+}
+
+.admin-form input:focus {
+    border-color: var(--botao-e-icone);
+    outline: none;
+}
+
+.admin-form button {
+    background-color: var(--botao-e-icone);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.admin-form button:hover {
+    filter: brightness(1.1);
+}
+
+/* Tabela de listagem dos usuários cadastrados */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: var(--fundo-principal);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.user-table th, .user-table td {
+    padding: 14px 20px;
+    text-align: left;
+}
+
+.user-table th {
+    background-color: rgba(0,0,0,0.3);
+    color: var(--botao-e-icone);
+    font-weight: bold;
+}
+
+.user-table tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-table tr:hover {
+    background-color: rgba(255,255,255,0.02);
+}
+
+/* Botão de deletar usuário de dentro da tabela */
+.btn-delete {
+    color: #FFF;
+    background-color: var(--perigo);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: filter 0.2s;
+}
+
+.btn-delete:hover {
+    filter: brightness(1.2);
+}

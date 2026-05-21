@@ -1,20 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/projeto.css">
-    <script src="/js/projeto.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/projeto.css') }}">
     <title>Espetinho do Edir</title>
-    {% if session['usuario_logado'] == 'admin@brasas.com' %}
-    <a href="{{ url_for('admin_panel') }}" class="btn-admin">Painel Admin</a>
-{% endif %}
-
-<a href="{{ url_for('logout') }}" class="btn-sair">Sair do Sistema</a>
-    <a href="{{ url_for('logout') }}">Sair do Sistema</a>
 </head>
 <body>
     <header>
-        
+        <div class="header-top">
+            <div class="logo-title">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Espetinho do Edir">
+                <h1>Espetinho do Edir</h1>
+            </div>
+            
+            <div class="header-actions">
+                {% if session['usuario_logado'] == 'admin@brasas.com' %}
+                    <a href="{{ url_for('admin.admin_panel') }}" class="btn-admin">Painel Admin 🛠️</a>
+                {% endif %}
+                
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair 🔒</a>
+            </div>
+        </div>
+
+        <nav>
+            <a href="#vendas">Vender</a>
+            <a href="#cozinha">Cozinha</a>
+            <a href="#historico">Histórico</a>
+            <a href="#caixa">Caixa</a>
+        </nav>
     </header>
+
+    <main>
+        <div class="rail">
+            <section class="vender" id="vendas">
+                <footer class="barra_informacao">
+                    </footer>
+            </section>
+            
+            <section class="cozinha" id="cozinha">
+                </section>
+            
+            <section class="historico" id="historico">
+                </section>
+            
+            <section class="caixa" id="caixa">
+                </section>
+        </div>
+    </main>
+</body>
 </html>
