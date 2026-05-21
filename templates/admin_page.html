@@ -12,11 +12,11 @@
             <h1>Painel de Controle</h1>
             
             <div>
-                <a href="{{ url_for('index') }}" class="btn-voltar" style="margin-right: 15px;">
+                <a href="{{ url_for('vendas.index') }}" class="btn-voltar" style="margin-right: 15px;">
                     Ir para o Espetinho do Edir 🍢
                 </a>
                 
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair do Sistema 🔒</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair do Sistema 🔒</a>
             </div>
         </header>
 
@@ -32,14 +32,24 @@
 
         <section>
             <h2>Criar Novo Usuário</h2>
-            <form action="{{ url_for('admin_criar') }}" method="POST" class="admin-form">
+            <form action="{{ url_for('admin.admin_criar') }}" method="POST" class="admin-form">
                 <input type="email" name="email" placeholder="E-mail do funcionário" required>
                 <input type="text" name="senha" placeholder="Senha de acesso" required>
                 <button type="submit">Cadastrar Funcionário</button>
             </form>
         </section>
 
-        <section>
+        <section style="margin-top: 40px;">
+            <h2>Cadastrar Novo Espetinho (Estoque)</h2>
+            <form action="{{ url_for('admin.admin_criar_produto') }}" method="POST" class="admin-form">
+                <input type="text" name="nome" placeholder="Nome do Espetinho (ex: Cupim)" required>
+                <input type="number" name="preco" step="0.01" placeholder="Preço (ex: 9.50)" required>
+                <input type="number" name="estoque" placeholder="Quantidade em Estoque" required>
+                <button type="submit">Cadastrar no Estoque</button>
+            </form>
+        </section>
+
+        <section style="margin-top: 40px;">
             <h2>Usuários Cadastrados</h2>
             <table class="user-table">
                 <thead>
@@ -58,7 +68,7 @@
                             {% if email == 'admin@brasas.com' %}
                                 <span style="color: #E37D22; font-weight: bold;">Super Admin</span>
                             {% else %}
-                                <a href="{{ url_for('admin_deletar', email=email) }}" class="btn-delete">Excluir</a>
+                                <a href="{{ url_for('admin.admin_deletar', email=email) }}" class="btn-delete">Excluir</a>
                             {% endif %}
                         </td>
                     </tr>

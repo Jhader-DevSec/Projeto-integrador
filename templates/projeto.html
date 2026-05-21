@@ -16,10 +16,10 @@
             
             <div class="header-actions">
                 {% if session['usuario_logado'] == 'admin@brasas.com' %}
-                    <a href="{{ url_for('admin_panel') }}" class="btn-admin">Painel Admin 🛠️</a>
+                    <a href="{{ url_for('admin.admin_panel') }}" class="btn-admin">Painel Admin 🛠️</a>
                 {% endif %}
                 
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair 🔒</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair 🔒</a>
             </div>
         </div>
 

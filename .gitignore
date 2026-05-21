@@ -1,1 +1,23 @@
+# Ambientes Virtuais (Venv)
 venv/
+.venv/
+env/
+
+# Arquivos de Cache do Python (Compilados)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Configurações do VS Code e Editores
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db

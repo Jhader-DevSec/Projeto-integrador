@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+# app.py
+from flask import Flask
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-# ===================================================
-# 1. CONFIGURAÇÕES E INICIALIZAÇÃO DO APP
-# ===================================================
+# Importação dos módulos (Blueprints) especializados de cada arquivo de rotas
+from routes.auth import auth_bp
+from routes.vendas import vendas_bp
+from routes.admin import admin_bp
+
+# Criação e inicialização do servidor Flask
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_para_a_faculdade'
 
@@ -16,13 +20,10 @@ limiter = Limiter(
 )
 
 
-# ===================================================
-# 2. "BANCO DE DADOS" EM MEMÓRIA
-# ===================================================
-usuarios_fake = {
-    "admin@brasas.com": "senha123",
-    "teste@brasas.com": "123456"
-}
+# Acoplamento e ativação dos módulos de código no motor principal do Flask
+app.register_blueprint(auth_bp)
+app.register_blueprint(vendas_bp)
+app.register_blueprint(admin_bp)
 
 
 # ===================================================
@@ -138,4 +139,4 @@ def admin_deletar(email):
 # 6. EXECUÇÃO DO SERVIDOR LOCAL
 # ===================================================
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) # debug=True faz o servidor reiniciar automaticamente ao salvar alterações
