@@ -64,14 +64,12 @@ header {
     font-weight: 600;
 }
 
-/* Container das ações do topo direito */
 .header-actions {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* Botão do Painel Admin */
 .btn-admin {
     color: var(--textos);
     text-decoration: none;
@@ -79,7 +77,7 @@ header {
     background-color: rgba(255, 255, 255, 0.03);
     padding: 8px 16px;
     border-radius: 6px;
-    border: 1px solid var(--botao-e-icone); /* Borda laranja brasa */
+    border: 1px solid var(--botao-e-icone);
     font-weight: 600;
     transition: all 0.2s ease;
 }
@@ -89,7 +87,6 @@ header {
     color: white;
 }
 
-/* Botão Sair */
 .btn-logout {
     color: var(--textos);
     text-decoration: none;
@@ -106,7 +103,6 @@ header {
     border-color: #f5c6cb;
 }
 
-/* Menu de Abas */
 nav {
     display: flex;
     width: 100%;
@@ -152,17 +148,161 @@ main {
     background-color: var(--fundo-principal);
     display: flex;
     flex-direction: column;
+    position: relative;          /* Transforma a tela na âncora do rodapé */
+    padding-bottom: 130px;       /* Abre um espaço de segurança no fundo da tela */
 }
 
 /* ===================================================
-   5. O RODAPÉ DA TELA DE VENDAS
+   5. OS CARDS DE PRODUTOS (Aba Vendas)
+   =================================================== */
+.vender {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    align-content: start;
+    overflow-y: auto;
+}
+
+.produto-card {
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.produto-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--botao-e-icone);
+}
+
+.produto-card h3 {
+    font-size: 1.2rem;
+    color: var(--textos);
+    margin-bottom: 4px;
+}
+
+.produto-card .preco {
+    color: var(--botao-e-icone);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.produto-card .estoque-disponivel {
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    margin-bottom: 10px;
+}
+
+/* ===================================================
+   6. OS BOTÕES DO CARRINHO
+   =================================================== */
+.botoes-carrinho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--fundo-principal);
+    padding: 6px 14px;
+    border-radius: 20px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.botoes-carrinho button {
+    background: none;
+    border: none;
+    color: var(--textos);
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.botoes-carrinho .btn-mais:hover {
+    color: #28a745;
+}
+
+.botoes-carrinho .btn-menos:hover {
+    color: #dc3545;
+}
+
+.botoes-carrinho .qtd-item {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--textos);
+    min-width: 25px;
+    text-align: center;
+}
+
+/* ===================================================
+   7. ATUALIZAÇÃO DA BARRA DE INFORMAÇÃO (RODAPÉ)
    =================================================== */
 .barra_informacao {
-    margin-top: auto;
+    grid-column: 1 / -1;
     background-color: var(--cards-e-tabelas);
     border: 1px solid var(--bordas);
     border-radius: 12px;
-    width: 100%;
-    height: 100px;
-    padding: 20px;
+    height: 85px;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;   /* Desprende a barra e permite flutuar */
+    bottom: 30px;         /* Fixa a exatamente 30px do chão da tela */
+    left: 30px;           /* Fixa a 30px da borda esquerda */
+    right: 30px;          /* Fixa a 30px da borda direita */
+    width: auto;          /* Deixa o left e o right definirem a largura automática */
+    z-index: 10;          /* Garante que ela fique por cima de qualquer espetinho */
+}
+
+.caixa-total {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.caixa-total h2 {
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.caixa-total h3 {
+    font-size: 1.7rem;
+    color: var(--textos);
+    font-weight: 700;
+}
+
+.barra_informacao button {
+    background-color: var(--botao-e-icone);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.barra_informacao button:hover {
+    background-color: #ff933b;
+    transform: scale(1.02);
+}
+
+.barra_informacao button:active {
+    transform: scale(0.98);
 }

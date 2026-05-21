@@ -33,20 +33,61 @@
 
     <main>
         <div class="rail">
+            <!--page vendas-->
             <section class="vender" id="vendas">
+                <!--verificação para adição de produtos-->
+                {% for id, produto in produtos.items() %}
+                    {% if produto.estoque > 0 %}
+                        <div class="produto-card" data-id="{{ id }}" data-preco="{{ produto.preco }}" data-estoque="{{ produto.estoque }}">
+            
+                            <h3>{{ produto.nome }}</h3>
+            
+                            <p class="preco">R$ {{ "%.2f"|format(produto.preco) }}</p>
+            
+                            <p class="estoque-disponivel">Disponível: {{ produto.estoque }} un</p>
+            
+                            <div class="botoes-carrinho">
+                                <button class="btn-menos">-</button>
+                                <span class="qtd-item">0</span>
+                                <button class="btn-mais">+</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <!--barra inferior area vendas-->
                 <footer class="barra_informacao">
-                    </footer>
+                
+                    <div class="caixa-total">
+                        <h2>Total do Pedido:</h2>
+
+                        <h3 id="valor-total">R$ 0,00</h3>
+                    </div>
+
+                    <button>Fechar pedido</button>
+
+                </footer>
             </section>
             
+            <!--page cozinha-->
             <section class="cozinha" id="cozinha">
-                </section>
+
+
+            </section>
             
+            <!--page historico-->
             <section class="historico" id="historico">
-                </section>
+
+
+            </section>
             
+            <!--page caixa  (somente aceivel a usuarios com nivel admin)-->
             <section class="caixa" id="caixa">
-                </section>
+
+
+            </section>
         </div>
     </main>
+    <script src="{{ url_for('static', filename='js/projeto.js') }}"></script>
 </body>
 </html>
