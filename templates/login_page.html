@@ -25,7 +25,7 @@
                 </div>
               {% endif %}
             {% endwith %}
-            <form action="/autenticar" method="POST">
+            <form action="{{ url_for('auth.autenticar') }}" method="POST">
                 <div class="form-group">
                     <label for="email">E-mail:</label>
                     <input 
@@ -54,7 +54,7 @@
             </form>
 
             <nav class="login-helper">
-                <p>Esqueceu a senha? <a href="{{ url_for('recuperar_senha') }}">Clique aqui</a></p>
+                <p>Esqueceu a senha? <a href="{{ url_for('auth.recuperar_senha') }}">Clique aqui</a></p>
             </nav>
         </section>
     </main>
