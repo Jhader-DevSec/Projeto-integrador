@@ -25,6 +25,24 @@ body {
     justify-content: center;
 }
 
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; /* Fica atrás de tudo */
+    object-fit: cover; /* Faz o vídeo preencher a tela sem esticar */
+    
+    /* AQUI VOCÊ CONTROLA A TRANSPARÊNCIA */
+    opacity: 0.4; 
+    
+    /* Deixa o fundo levemente embaçado para dar foco ao formulário */
+    filter: blur(2px) brightness(0.6);
+}
+
 /* Container mestre do painel */
 .admin-container {
     width: 100%;

@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_page.css') }}">
 </head>
 <body>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="{{ url_for('static', filename='mp4/brasas_video.mp4') }}" type="video/mp4">
+    </video>
     <div class="admin-container">
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h1>Painel de Controle</h1>
