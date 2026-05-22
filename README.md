@@ -28,9 +28,10 @@ Diferente de projetos acadêmicos puramente teóricos, o desenvolvimento do **Es
 
 ## 📱 Demonstração da Interface (Preview)
 
-*(Dica: Adicione um GIF ou print da sua tela aqui quando puder!)*
+https://github.com/user-attachments/assets/ff3a1f2a-03f1-4ea8-906f-8902d1cf588f
+
 <p align="center">
-  <img src="static/img/logo.png" alt="Espetinho do Edir" width="200px">
+  <img src="static/img/logo.png" alt="Espetinho do Edir" width="160px">
 </p>
 
 ---
@@ -40,12 +41,12 @@ Diferente de projetos acadêmicos puramente teóricos, o desenvolvimento do **Es
 Como desenvolvedor focado em compreender profundamente o ecossistema de back-end e arquitetura de software, o projeto trouxe desafios complexos que exigiram soluções maduras:
 
 ### 1. Desfazer o Monolito (Modularização)
-**Desafio:** Manter rotas de autenticação, vendas e administração no mesmo arquivo torna o código insustentável.
-**Solução:** Implementação de **Flask Blueprints** isolando os contextos. Isso me permitiu compreender como estruturar pastas de nível profissional, organizando rotas, estáticos e templates de forma desacoplada.
+* **Desafio:** Manter rotas de autenticação, vendas e administração no mesmo arquivo torna o código insustentável.
+* **Solução:** Implementação de **Flask Blueprints** isolando os contextos. Isso me permitiu compreender como estruturar pastas de nível profissional, organizando rotas, estáticos e templates de forma desacoplada.
 
 ### 2. Sincronização de Estoque Vivo no Front-end (Sem Banco SQL)
-**Desafio:** Impedir que o operador venda itens acima do estoque real e ocultar produtos esgotados instantaneamente sem sobrecarregar o servidor com requisições HTTP a cada clique.
-**Solução:** Uso de injeção de contexto via Jinja estruturando blocos condicionais (`{% if produto.estoque > 0 %}`) para limpar a interface. Para os botões de ação, injetei metadados estruturados (`data-preco`, `data-estoque`) no DOM HTML. O JavaScript Vanilla (ES6) captura essas pistas e faz as validações em memória de forma reativa e segura.
+* **Desafio:** Impedir que o operador venda itens acima do estoque real e ocultar produtos esgotados instantaneamente sem sobrecarregar o servidor com requisições HTTP a cada clique.
+* **Solução:** Uso de injeção de contexto via Jinja estruturando blocos condicionais (`{% if produto.estoque > 0 %}`) para limpar a interface. Para os botões de ação, injetei metadados estruturados (`data-preco`, `data-estoque`) no DOM HTML. O JavaScript Vanilla (ES6) captura essas pistas e faz as validações em memória de forma reativa e segura.
 
 ### 🔄 Fluxo de Dados do Carrinho de Vendas
 ```mermaid
