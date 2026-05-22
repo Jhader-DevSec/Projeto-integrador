@@ -14,6 +14,7 @@
     --textos: #F5F5F5;
     --bordas: #8B4513;
     --perigo: #C0392B; /* Vermelho escuro para ações de deletar */
+    --sucesso: #27AE60; /* Verde escuro para navegação segura */
 }
 
 body {
@@ -23,6 +24,7 @@ body {
     padding: 40px;
     display: flex;
     justify-content: center;
+    min-height: 100vh;
 }
 
 #bg-video {
@@ -46,12 +48,13 @@ body {
 /* Container mestre do painel */
 .admin-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
     background-color: var(--cards-e-tabelas);
     border: 1px solid var(--bordas);
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    height: fit-content;
 }
 
 /* Títulos do painel */
@@ -67,17 +70,35 @@ h2 {
 }
 
 /* Link para o Admin conseguir voltar para a tela de vendas */
-.btn-voltar {
+.btn-espetinho {
     display: inline-block;
-    color: var(--botao-e-icone);
+    background-color: var(--sucesso);
+    color: white;
     text-decoration: none;
     font-weight: bold;
-    margin-bottom: 25px;
-    transition: opacity 0.2s;
+    padding: 10px 18px;
+    border-radius: 6px;
+    margin-right: 10px;
+    transition: background-color 0.2s;
 }
 
-.btn-voltar:hover {
-    opacity: 0.8;
+.btn-espetinho:hover {
+    background-color: #219653;
+}
+
+.btn-sair {
+    display: inline-block;
+    background-color: var(--perigo);
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.btn-sair:hover {
+    background-color: #a93226;
 }
 
 /* Formulário de criar novos usuários */
@@ -88,7 +109,7 @@ h2 {
     margin-bottom: 20px;
 }
 
-.admin-form input {
+.admin-form input, .admin-form select {
     flex: 1;
     min-width: 200px;
     padding: 12px;
@@ -96,9 +117,14 @@ h2 {
     border: 1px solid #444;
     border-radius: 6px;
     color: white;
+    font-size: 0.95rem;
 }
 
-.admin-form input:focus {
+.admin-form select {
+    cursor: pointer;
+}
+
+.admin-form input:focus, .admin-form select:focus {
     border-color: var(--botao-e-icone);
     outline: none;
 }
@@ -147,6 +173,21 @@ h2 {
     background-color: rgba(255,255,255,0.02);
 }
 
+/* Estilo para as tags de cargo dentro da tabela */
+.tag-cargo {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--textos);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.dono-sistema {
+    color: #888;
+    font-style: italic;
+}
+
 /* Botão de deletar usuário de dentro da tabela */
 .btn-delete {
     color: #FFF;
@@ -157,6 +198,7 @@ h2 {
     font-size: 0.85rem;
     font-weight: 600;
     transition: filter 0.2s;
+    display: inline-block;
 }
 
 .btn-delete:hover {

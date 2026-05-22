@@ -4,30 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Admin - Brasas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/projeto.css') }}">
-    <style>
-        .admin-container { max-width: 900px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 8px; color: #333; box-shadow: 0 4px 8px rgba(0,0,0,0.1); font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #ccc; text-align: left; }
-        th { background-color: #f8f9fa; }
-        .btn-sair { background: #ff4444; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
-        .btn-espetinho { background: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-right: 10px; }
-        .mensagens { color: #d9534f; font-weight: bold; margin-bottom: 15px; }
-        .form-criar input, .form-criar select { padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        .form-criar button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .tag-cargo { background: #e9ecef; padding: 4px 8px; border-radius: 4px; font-size: 0.9em; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_page.css') }}">
 </head>
 <body>
     <video autoplay muted loop playsinline id="bg-video">
         <source src="{{ url_for('static', filename='mp4/brasas_video.mp4') }}" type="video/mp4">
     </video>
+    
     <div class="admin-container">
-        <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+        <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; margin-bottom: 20px;">
             <h1>Painel de Controle (Gerente)</h1>
             <div>
-                <a href="{{ url_for('index') }}" class="btn-espetinho">Ir para o Espetinho do Edir</a>
-                <a href="{{ url_for('logout') }}" class="btn-sair">Sair do Sistema</a>
+                <a href="{{ url_for('vendas.index') }}" class="btn-espetinho">Ir para o Espetinho do Edir</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-sair">Sair do Sistema</a>
             </div>
         </header>
 
@@ -43,9 +32,9 @@
 
         <section style="margin-bottom: 40px;">
             <h2>Cadastrar Novo Funcionário</h2>
-            <form action="{{ url_for('admin_criar') }}" method="POST" class="form-criar">
+            <form action="{{ url_for('admin.admin_criar') }}" method="POST" class="admin-form">
                 <input type="email" name="email" placeholder="E-mail do funcionário" required>
-                <input type="text" name="senha" placeholder="Senha inicial" required>
+                <input type="password" name="senha" placeholder="Senha inicial" required>
                 
                 <select name="cargo" required>
                     <option value="" disabled selected>Escolha o Cargo</option>
@@ -60,7 +49,7 @@
 
         <section>
             <h2>Funcionários com Acesso ao Sistema</h2>
-            <table>
+            <table class="user-table">
                 <thead>
                     <tr>
                         <th>E-mail / Usuário</th>
@@ -73,13 +62,13 @@
                     {% for email, dados in usuarios.items() %}
                     <tr>
                         <td>{{ email }}</td>
-                        <td>{{ dados.senha }}</td>
+                        <td>••••••••</td>
                         <td><span class="tag-cargo">{{ dados.cargo }}</span></td>
                         <td>
                             {% if email == 'admin@brasas.com' %}
-                                <em>Dono do Sistema</em>
+                                <em class="dono-sistema">Dono do Sistema</em>
                             {% else %}
-                                <a href="{{ url_for('admin_deletar', email=email) }}" style="color: #d9534f; text-decoration: none; font-weight: bold;" onclick="return confirm('Deseja mesmo remover o acesso de {{ email }}?')">Excluir</a>
+                                <a href="{{ url_for('admin.admin_deletar', email=email) }}" class="btn-delete" onclick="return confirm('Deseja mesmo remover o acesso de {{ email }}?')">Excluir</a>
                             {% endif %}
                         </td>
                     </tr>
