@@ -36,18 +36,6 @@ https://github.com/user-attachments/assets/ff3a1f2a-03f1-4ea8-906f-8902d1cf588f
 
 ---
 
-## 🧠 Desafios Técnicos & Aprendizados
-
-Como desenvolvedor focado em compreender profundamente o ecossistema de back-end e arquitetura de software, o projeto trouxe desafios complexos que exigiram soluções maduras:
-
-### 1. Desfazer o Monolito (Modularização)
-* **Desafio:** Manter rotas de autenticação, vendas e administração no mesmo arquivo torna o código insustentável.
-* **Solução:** Implementação de **Flask Blueprints** isolando os contextos. Isso me permitiu compreender como estruturar pastas de nível profissional, organizando rotas, estáticos e templates de forma desacoplada.
-
-### 2. Sincronização de Estoque Vivo no Front-end (Sem Banco SQL)
-* **Desafio:** Impedir que o operador venda itens acima do estoque real e ocultar produtos esgotados instantaneamente sem sobrecarregar o servidor com requisições HTTP a cada clique.
-* **Solução:** Uso de injeção de contexto via Jinja estruturando blocos condicionais (`{% if produto.estoque > 0 %}`) para limpar a interface. Para os botões de ação, injetei metadados estruturados (`data-preco`, `data-estoque`) no DOM HTML. O JavaScript Vanilla (ES6) captura essas pistas e faz as validações em memória de forma reativa e segura.
-
 ## 🔐 Credenciais de Teste
 
 Para navegar pelas diferentes camadas do sistema (PDV e Painel Administrativo), utilize os seguintes acessos simulados em memória:
@@ -57,9 +45,23 @@ Para navegar pelas diferentes camadas do sistema (PDV e Painel Administrativo), 
 | **Administrador / Gerente** | `admin` | `admin123` |
 | **Operador de Caixa / PDV** | `caixa` | `caixa123` |
 
+---
+
+## 🧠 Desafios Técnicos & Aprendizados
+
+Como desenvolvedor focado em compreender profundamente o ecossistema de back-end, arquitetura de software e segurança, o projeto trouxe desafios complexos que exigiram soluções maduras:
+
+### 1. Desfazer o Monolito (Modularização)
+* **Desafio:** Manter rotas de autenticação, vendas e administração no mesmo arquivo torna o código insustentável.
+* **Solução:** Implementação de **Flask Blueprints** isolando os contextos. Isso me permitiu compreender como estruturar pastas de nível profissional, organizando rotas, estáticos e templates de forma desacoplada.
+
+### 2. Sincronização de Estoque Vivo no Front-end (Sem Banco SQL)
+* **Desafio:** Impedir que o operador venda itens acima do estoque real e ocultar produtos esgotados instantaneamente sem sobrecarregar o servidor com requisições HTTP a cada clique.
+* **Solução:** Uso de injeção de contexto via Jinja estruturando blocos condicionais (`{% if produto.estoque > 0 %}`) para limpar a interface. Para os botões de ação, injetei metadados estruturados (`data-preco`, `data-estoque`) no DOM HTML. O JavaScript Vanilla (ES6) captura essas pistas e faz as validações em memória de forma reativa e segura.
+
 ### 3. Proteção de Sessão e Controle de Acesso
-* **Desafio:** Garantir que um operador de caixa comum não consiga acessar as rotas de administração alterando a URL do navegador.
-* **Solução:** Utilização de gerenciamento de sessões nativas do Flask (`flask.session`), aplicando validações nos endpoints administrativos para verificar o nível de privilégio do usuário logado antes de renderizar os templates.
+* **Desafio:** Garantir que um operador de caixa comum não consiga acessar as rotas de administração alterando manualmente a URL do navegador.
+* **Solução:** Utilização de gerenciamento de sessões nativas do Flask (`flask.session`), aplicando validações nos endpoints administrativos para verificar ativamente o nível de privilégio e autenticação do usuário logado antes de renderizar os templates.
 
 ### 🔄 Fluxo de Dados do Carrinho de Vendas
 ```mermaid
@@ -69,9 +71,3 @@ graph TD
     B -- Não --> D[Dispara Alerta de Bloqueio]
     C --> E[JS Varre os Cards & Multiplica Valores]
     E --> F[Atualiza ID #valor-total no Rodapé]
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para obter mais detalhes.
