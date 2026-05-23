@@ -42,8 +42,8 @@ Para navegar pelas diferentes camadas do sistema (PDV e Painel Administrativo), 
 
 | Perfil | Usuário | Senha |
 | :--- | :--- | :--- |
-| **Administrador / Gerente** | `admin` | `admin123` |
-| **Operador de Caixa / PDV** | `caixa` | `caixa123` |
+| **Administrador / Gerente** | `"admin@brasas.com"` | `admin123` |
+| **Operador de Caixa / PDV** | `teste@brasas.com` | `123456` |
 
 ---
 
