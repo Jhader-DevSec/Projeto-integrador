@@ -48,6 +48,19 @@ Como desenvolvedor focado em compreender profundamente o ecossistema de back-end
 * **Desafio:** Impedir que o operador venda itens acima do estoque real e ocultar produtos esgotados instantaneamente sem sobrecarregar o servidor com requisições HTTP a cada clique.
 * **Solução:** Uso de injeção de contexto via Jinja estruturando blocos condicionais (`{% if produto.estoque > 0 %}`) para limpar a interface. Para os botões de ação, injetei metadados estruturados (`data-preco`, `data-estoque`) no DOM HTML. O JavaScript Vanilla (ES6) captura essas pistas e faz as validações em memória de forma reativa e segura.
 
+## 🔐 Credenciais de Teste
+
+Para navegar pelas diferentes camadas do sistema (PDV e Painel Administrativo), utilize os seguintes acessos simulados em memória:
+
+| Perfil | Usuário | Senha |
+| :--- | :--- | :--- |
+| **Administrador / Gerente** | `admin` | `admin123` |
+| **Operador de Caixa / PDV** | `caixa` | `caixa123` |
+
+### 3. Proteção de Sessão e Controle de Acesso
+* **Desafio:** Garantir que um operador de caixa comum não consiga acessar as rotas de administração alterando a URL do navegador.
+* **Solução:** Utilização de gerenciamento de sessões nativas do Flask (`flask.session`), aplicando validações nos endpoints administrativos para verificar o nível de privilégio do usuário logado antes de renderizar os templates.
+
 ### 🔄 Fluxo de Dados do Carrinho de Vendas
 ```mermaid
 graph TD
@@ -56,3 +69,9 @@ graph TD
     B -- Não --> D[Dispara Alerta de Bloqueio]
     C --> E[JS Varre os Cards & Multiplica Valores]
     E --> F[Atualiza ID #valor-total no Rodapé]
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para obter mais detalhes.
