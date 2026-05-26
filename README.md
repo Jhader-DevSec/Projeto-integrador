@@ -14,7 +14,7 @@
 
 > 🚀 **Projeto Integrador / Trabalho Final de Curso (Em Desenvolvimento)**
 >
-> Embora concebido como um projeto acadêmico para consolidação de conhecimentos, este sistema foi planejado, estruturado e arquitetado para atender a uma operação comercial real. Toda a especificação de requisitos e regras de negócio foi baseada nas necessidades práticas observadas diretamente em um comércio ativo, focado estritamente no gerenciamento interno da empresa.
+> Embora concebido como um projeto acadêmico para consolidação de conhecimentos, este sistema foi **planejado, estruturado e arquitetado para atender a uma operação comercial real**. Toda a especificação de requisitos e regras de negócio foi baseada nas necessidades práticas observadas diretamente em um comércio ativo, focado estritamente no gerenciamento interno da empresa.
 
 O sistema foi pensado sob medida para a operação de uma espetaria, abrangendo desde a frente de caixa reativa (PDV) até o fluxo operacional da cozinha e auditoria gerencial.
 
@@ -24,7 +24,7 @@ O sistema foi pensado sob medida para a operação de uma espetaria, abrangendo 
 
 O objetivo principal do sistema é centralizar e otimizar o fluxo operacional interno de uma espetaria, reduzindo falhas humanas, melhorando o controle de estoque, automatizando processos de venda e facilitando a comunicação entre caixa, cozinha e gestão administrativa.
 
-O projeto também foi utilizado como laboratório prático para aplicação de conceitos modernos de:
+O projeto também é utilizado como laboratório prático para aplicação de conceitos modernos de:
 
 - Arquitetura Back-end
 - Segurança de Aplicações (AppSec)
@@ -67,47 +67,45 @@ Diferente de projetos acadêmicos puramente teóricos, o desenvolvimento do sist
 - Bloqueio automático de vendas acima do estoque disponível
 - Ocultação dinâmica de produtos esgotados
 - Integração operacional entre PDV e cozinha
-- Estrutura administrativa separada do operador de caixa
-- Fluxo de cancelamento com estorno automático
-- Controle de acesso por nível de privilégio
+- Estrutura administrativa isolada do operador de caixa
+- Fluxo de cancelamento com estorno automático de insumos
+- Controle de acesso por nível de privilégio (RBAC)
 
 ---
 
 # 🛡️ Boas Práticas e Engenharia Aplicada
 
-Desde o início do projeto, buscamos aplicar conceitos próximos de ambientes corporativos reais:
+Buscamos aplicar conceitos arquiteturais e de infraestrutura próximos aos encontrados em ambientes corporativos reais:
 
-- Estruturação modular de pastas (`templates`, `static`, `routes`, etc.)
-- Uso de ambientes virtuais (`venv`) para isolamento de dependências
-- Controle de dependências via `requirements.txt`
-- Organização da aplicação utilizando Flask Blueprints
-- Implementação inicial de proteção contra força bruta utilizando `Flask-Limiter`
-- Separação entre camada visual e lógica de negócio
-- Planejamento de autenticação segura com `Bcrypt`
-- Planejamento de armazenamento seguro de segredos via `.env`
-- Planejamento de persistência utilizando banco de dados relacional
+- Estruturação modular de pacotes (`templates`, `static`, `routes`)
+- Uso de ambientes virtuais (`venv`) para isolamento e reprodutibilidade do ecossistema
+- Controle de dependências e pacotes via `requirements.txt`
+- Organização desacoplada de rotas utilizando Flask Blueprints
+- Implementação de proteção contra ataques automatizados de força bruta com `Flask-Limiter`
+- Separação entre camada visual (View) e lógica de negócio (Controller)
+- Planejamento de criptografia e hashing seguro de credenciais com `Bcrypt`
+- Isolamento de chaves e credenciais sensíveis através de variáveis de ambiente (`.env`)
 
 ---
 
 # 🔐 Segurança da Aplicação
 
-Mesmo em fase de prototipagem, o projeto já incorpora preocupações relacionadas à segurança de aplicações web.
+Mesmo em fase de prototipagem, o projeto incorpora preocupações rigorosas relacionadas à segurança da informação em aplicações web.
 
 ## Medidas já implementadas:
 
-- Controle de sessão utilizando `flask.session`
-- Restrições de acesso por privilégio
-- Proteção básica contra força bruta com `Flask-Limiter`
-- Validação de acesso às rotas administrativas
-- Organização modular visando manutenção segura
+- Controle e validação de estado de sessão via `flask.session`
+- Bloqueio de rotas administrativas para usuários sem privilégios gerenciais (RBAC)
+- Rate-limiting acoplado ao endereço IP do cliente (`get_remote_address`) para mitigação de ataques de força bruta
+- Configuração refinada do `.gitignore` para evitar vazamento de binários e arquivos locais
 
 ## Roadmap de segurança:
 
-- Hash seguro de senhas utilizando `Bcrypt`
-- Migração de credenciais para banco de dados
-- Implementação de variáveis de ambiente (`.env`)
+- Implementação de hash criptográfico de senhas via `Bcrypt`
+- Migração da persistência em memória para banco de dados relacional
+- Implementação de proteção contra ataques CSRF
 - Hardening da autenticação
-- Refatoração completa do gerenciamento de usuários
+- Expansão do controle de sessões
 
 ---
 
@@ -123,7 +121,7 @@ https://github.com/user-attachments/assets/ff3a1f2a-03f1-4ea8-906f-8902d1cf588f
 
 # 🔐 Credenciais de Teste
 
-Para navegação entre os módulos do sistema:
+Para navegação entre os módulos do sistema durante a homologação local:
 
 | Perfil | Usuário | Senha |
 |---|---|---|
@@ -137,30 +135,30 @@ Para navegação entre os módulos do sistema:
 ## 1. Modularização da Aplicação
 
 ### Desafio:
-Evitar acoplamento excessivo entre autenticação, vendas e administração.
+Evitar acoplamento excessivo e arquivos monolíticos contendo toda a lógica de autenticação, vendas e administração.
 
 ### Solução:
-Implementação de Flask Blueprints para separação de responsabilidades e organização escalável da aplicação.
+Implementação de Flask Blueprints, distribuindo o fluxo em controladores especializados e independentes dentro do diretório `routes/`.
 
 ---
 
 ## 2. Sincronização de Estoque em Tempo Real
 
 ### Desafio:
-Impedir vendas acima do estoque disponível sem gerar múltiplas requisições HTTP.
+Impedir vendas acima do estoque físico disponível sem sobrecarregar o servidor com múltiplas requisições HTTP síncronas.
 
 ### Solução:
-Uso de atributos personalizados no DOM (`data-estoque`, `data-preco`) combinados com JavaScript Vanilla para validações reativas no front-end.
+Injeção de metadados estruturados no DOM (`data-estoque`, `data-preco`) consumidos dinamicamente por funções em JavaScript Vanilla (ES6), responsáveis pelas validações reativas diretamente na interface.
 
 ---
 
 ## 3. Controle de Acesso e Sessões
 
 ### Desafio:
-Evitar acesso indevido ao painel administrativo via alteração manual de URL.
+Garantir que usuários comuns não consigam acessar rotas administrativas manipulando URLs manualmente.
 
 ### Solução:
-Validação ativa de sessões e níveis de privilégio utilizando `flask.session`.
+Implementação de validação ativa de sessões e controle de privilégios utilizando `flask.session`.
 
 ---
 
@@ -179,20 +177,30 @@ graph TD
 
 # 📂 Estrutura Base do Projeto
 
-```bash
-📦 espetinho-do-edir
- ┣ 📂 static
- ┃ ┣ 📂 css
- ┃ ┣ 📂 js
- ┃ ┗ 📂 img
- ┣ 📂 templates
- ┣ 📂 routes
- ┣ 📂 auth
- ┣ 📂 admin
- ┣ 📂 pdv
- ┣ 📜 app.py
- ┣ 📜 requirements.txt
- ┗ 📜 README.md
+```plaintext
+espetinho-do-edir/
+│
+├── routes/                  # Camada de Controladores (Blueprints Modularizados)
+│   ├── __init__.py
+│   ├── admin.py             # Painel administrativo e gerenciamento interno
+│   ├── auth.py              # Login, autenticação e sessões
+│   └── vendas.py            # Regras da frente de caixa (PDV)
+│
+├── static/                  # Arquivos estáticos globais
+│   ├── css/
+│   ├── img/
+│   ├── js/
+│   └── mp4/
+│
+├── templates/               # Templates Jinja2
+│   ├── admin_page.html
+│   ├── login_page.html
+│   └── projeto.html
+│
+├── app.py                   # Inicializador principal da aplicação
+├── banco.py                 # Persistência de dados em memória
+├── requirements.txt         # Dependências do projeto
+└── README.md
 ```
 
 ---
@@ -200,23 +208,73 @@ graph TD
 # 🚧 Roadmap do Projeto
 
 ## 🔙 Back-end
-- [ ] Integração com banco de dados SQL
-- [ ] Sistema real de autenticação
-- [ ] Hash de senha com Bcrypt
-- [ ] API REST interna
-- [ ] Logs administrativos
+
+- [ ] Integração com banco de dados relacional SQL (SQLAlchemy / PostgreSQL)
+- [ ] Sistema de persistência permanente de pedidos
+- [ ] Implementação de API REST interna
+- [ ] Geração de logs administrativos e auditoria gerencial
 
 ## 🎨 Front-end
-- [ ] Melhorias de responsividade
-- [ ] Painel administrativo avançado
-- [ ] Feedback visual em tempo real
-- [ ] Dashboard gerencial
+
+- [ ] Ajustes e testes de responsividade
+- [ ] Painel avançado de cozinha
+- [ ] Feedback visual síncrono de pedidos
+- [ ] Dashboard gerencial com métricas financeiras
 
 ## 🛡️ Segurança
-- [ ] Variáveis de ambiente
-- [ ] Hardening de autenticação
+
+- [ ] Variáveis de ambiente (`.env`)
+- [ ] Hardening da autenticação
 - [ ] Proteção CSRF
-- [ ] Controle de sessões avançado
+- [ ] Controle avançado de sessões
+- [ ] Hash seguro de credenciais com Bcrypt
+
+---
+
+# 🚀 Como Executar o Projeto Localmente
+
+Certifique-se de possuir o Python 3.11 ou superior instalado em sua máquina.
+
+## 1. Clone o repositório
+
+```bash
+git clone https://github.com/Jhader-DevSec/Projeto-integrador.git
+cd Projeto-integrador
+```
+
+## 2. Configure e ative o ambiente virtual
+
+### Windows (PowerShell / CMD)
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### Linux / MacOS
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+## 3. Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Execute o servidor Flask
+
+```bash
+python app.py
+```
+
+## 5. Acesse no navegador
+
+```bash
+http://127.0.0.1:5000
+```
 
 ---
 
@@ -245,4 +303,4 @@ Atualmente em fase de expansão da arquitetura, melhoria de segurança e impleme
 
 # 📄 Licença
 
-Projeto desenvolvido para fins educacionais e de portfólio.
+Projeto desenvolvido para fins educacionais e de composição de portfólio técnico.
