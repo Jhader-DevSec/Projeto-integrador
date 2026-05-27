@@ -126,7 +126,7 @@ Para navegação entre os módulos do sistema durante a homologação local:
 
 | Perfil | Usuário | Senha |
 |---|---|---|
-| **Administrador / Gerente** | `admin@brasas.com` | `admin123` |
+| **Administrador / Gerente** | `admin@brasas.com` | `senha123` |
 | **Operador de Caixa / PDV** | `teste@brasas.com` | `123456` |
 
 ---
