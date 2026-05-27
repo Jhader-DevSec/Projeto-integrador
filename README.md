@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  Desenvolvido em equipe com Pedro Neves e Camila Emanuelle
+  Desenvolvido em equipe com Pedro Neves, Camila Emanuelle e Arthur Luís
 </p>
 
 ---
@@ -54,6 +54,7 @@ O projeto está sendo desenvolvido de forma colaborativa, com divisão estratég
 | **Jhader Augusto** | Liderança técnica, arquitetura do sistema, desenvolvimento Back-end com Flask, engenharia de regras de negócio, segurança da aplicação e integração dos processos Front-end |
 | **Pedro Neves** | Estruturação do Back-end, apoio na arquitetura do sistema e desenvolvimento da lógica da aplicação |
 | **Camila Emanuelle** | Interface visual, estilização da aplicação, experiência do usuário e interatividade Front-end com CSS e JavaScript |
+| **Arthur Luís** | Concepção técnica inicial, mapeamento e desenvolvimento da etapa de prototipação estrutural do site. |
 
 ---
 
