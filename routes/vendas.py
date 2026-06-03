@@ -1,6 +1,7 @@
 # routes/vendas.py
 from flask import Blueprint, render_template, redirect, url_for, session, flash
 from banco import produtos_fake  # Importa o estoque de produtos para exibir na tela
+from banco import pedidos_pendentes_fake # Importa o estoque de produtos para exibir na tela
 
 # Inicializa o Blueprint operacional das vendas
 vendas_bp = Blueprint('vendas', __name__)
@@ -14,4 +15,4 @@ def index():
         return redirect(url_for('auth.login_page'))
     
     # Se estiver logado, renderiza o painel de vendas e envia o estoque de produtos atualizado
-    return render_template('projeto.html', produtos=produtos_fake)
+    return render_template('projeto.html', produtos=produtos_fake, pedidos_pendentes_fake=pedidos_pendentes_fake)

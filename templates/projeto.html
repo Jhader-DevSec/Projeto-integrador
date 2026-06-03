@@ -34,7 +34,7 @@
     <main>
         <div class="rail">
             <!--page vendas-->
-            <section class="vendas.vender" id="vendas">
+            <section class="vender" id="vendas">
                 <!--verificação para adição de produtos-->
                 {% for id, produto in produtos.items() %}
                     {% if produto.estoque > 0 %}
@@ -71,8 +71,30 @@
             
             <!--page cozinha-->
             <section class="cozinha" id="cozinha">
+                    {% for pedido in pedidos_pendentes_fake %}
+                    <div class="validacao_pedidos" data-id="{{ pedido.id }}">
+                         Pedido #{{ pedido.id }}
+                        {{ pedido.forma_pagamento }}
 
+                        <ul>
+                                {% for item in pedido.itens %}
+                                <li>
+                                    {{ item.quantidade }} x {{ item.nome}}
+                                </li>
+                                {% endfor %}
+                        </ul>
+                        <h3>Total: R$ {{ pedido.total }}</h3>
 
+                        <button class="btn_cancelar">
+                            <i class="fas fa-xmark">Cancelar</i>
+                        </button>
+
+                        <button class="btn_confirmar">
+                            <i class="fas fa-check">Confirmar</i>
+                        </button>
+                    </div>
+
+                    {% endfor %}
             </section>
             
             <!--page historico-->

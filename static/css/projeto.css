@@ -306,3 +306,113 @@ main {
 .barra_informacao button:active {
     transform: scale(0.98);
 }
+
+/* ===================================================
+   8. OS CARDS DA COZINHA (Aba Cozinha)
+   =================================================== */
+
+/* Transforma a seção da cozinha em uma grade de cards responsiva */
+.cozinha {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    align-content: start;
+    overflow-y: auto;
+}
+
+/* Estilização estrutural do card de cada pedido */
+.validacao_pedidos {
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 4px solid var(--botao-e-icone); /* Linha temática no topo do card */
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    color: var(--textos);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* Caixa interna que isola a lista de espetinhos a preparar */
+.validacao_pedidos ul {
+    list-style: none;
+    background-color: var(--fundo-principal);
+    padding: 12px;
+    border-radius: 8px;
+    margin: 8px 0;
+    border-left: 4px solid var(--botao-e-icone);
+}
+
+/* Cada linha de espetinho dentro da lista */
+.validacao_pedidos li {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 6px 0;
+    color: #e0e0e0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Remove a linha divisória do último espetinho da lista */
+.validacao_pedidos li:last-child {
+    border-bottom: none;
+}
+
+/* Alinhamento e destaque do valor total do pedido */
+.validacao_pedidos h3 {
+    font-size: 1.3rem;
+    color: var(--textos);
+    margin: 5px 0 10px 0;
+    font-weight: 700;
+    text-align: right;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 10px;
+}
+
+/* Configuração base para os botões de ação da cozinha */
+.validacao_pedidos button {
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    width: 100%; /* Botões ocupam a largura total para facilitar o toque */
+}
+
+/* Estilo do Botão Cancelar (X) */
+.validacao_pedidos .btn_cancelar {
+    background-color: #3d1d1d;
+    border: 1px solid #721c24;
+    color: #f5c6cb;
+    margin-top: 5px;
+}
+
+.validacao_pedidos .btn_cancelar:hover {
+    background-color: #721c24;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Estilo do Botão Confirmar (Check) */
+.validacao_pedidos .btn_confirmar {
+    background-color: #1d3d24;
+    border: 1px solid #28a745;
+    color: #c3e6cb;
+}
+
+.validacao_pedidos .btn_confirmar:hover {
+    background-color: #28a745;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Efeito de clique nos botões */
+.validacao_pedidos button:active {
+    transform: translateY(0);
+}
