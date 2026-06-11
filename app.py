@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = 'chave_super_secreta_para_a_faculdade'
 
 # 2. CONFIGURAÇÃO DO BANCO DE DADOS (CLEVER CLOUD)
-USUARIO = "ua7ema8hoi5elyvo"
+USUARIO = "ua7ena8hoi5elyvo"
 SENHA = "AFZEmdIewHuPCt1UQH2I" 
 HOST = "bb5xdtk17gidsyrp3fky-mysql.services.clever-cloud.com"
 PORTA = "3306"
