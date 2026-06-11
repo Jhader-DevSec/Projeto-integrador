@@ -59,16 +59,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for email, dados in usuarios.items() %}
+                    {% for usuario in usuarios %}
                     <tr>
-                        <td>{{ email }}</td>
+                        <td>{{ usuario.email }}</td>
                         <td>••••••••</td>
-                        <td><span class="tag-cargo">{{ dados.cargo }}</span></td>
                         <td>
-                            {% if email == 'admin@brasas.com' %}
+                            <span class="tag-cargo">
+                                {% if usuario.nivel_acesso == 'admin' %}Gerente{% else %}Funcionário{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if usuario.email == 'admin@brasas.com' %}
                                 <em class="dono-sistema">Dono do Sistema</em>
                             {% else %}
-                                <a href="{{ url_for('admin.admin_deletar', email=email) }}" class="btn-delete" onclick="return confirm('Deseja mesmo remover o acesso de {{ email }}?')">Excluir</a>
+                                <a href="{{ url_for('admin.admin_deletar', email=usuario.email) }}" class="btn-delete" onclick="return confirm('Deseja mesmo remover o acesso de {{ usuario.email }}?')">Excluir</a>
                             {% endif %}
                         </td>
                     </tr>

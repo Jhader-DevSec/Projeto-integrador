@@ -15,7 +15,7 @@
             </div>
             
             <div class="header-actions">
-                {% if session['usuario_logado'] == 'admin@brasas.com' %}
+                {% if session['nivel_acesso'] == 'admin' %}
                     <a href="{{ url_for('admin.admin_panel') }}" class="btn-admin">Painel Admin 🛠️</a>
                 {% endif %}
                 
@@ -33,9 +33,7 @@
 
     <main>
         <div class="rail">
-            <!--page vendas-->
             <section class="vender" id="vendas">
-                <!--verificação para adição de produtos-->
                 {% for id, produto in produtos.items() %}
                     {% if produto.estoque > 0 %}
                         <div class="produto-card" data-id="{{ id }}" data-preco="{{ produto.preco }}" data-estoque="{{ produto.estoque }}">
@@ -55,12 +53,10 @@
                     {% endif %}
                 {% endfor %}
 
-                <!--barra inferior area vendas-->
                 <footer class="barra_informacao">
                 
                     <div class="caixa-total">
                         <h2>Total do Pedido:</h2>
-
                         <h3 id="valor-total">R$ 0,00</h3>
                     </div>
 
@@ -69,7 +65,6 @@
                 </footer>
             </section>
             
-            <!--page cozinha-->
             <section class="cozinha" id="cozinha">
                     {% for pedido in pedidos_pendentes_fake %}
                     <div class="validacao_pedidos" data-id="{{ pedido.id }}">
@@ -83,7 +78,7 @@
                                 </li>
                                 {% endfor %}
                         </ul>
-                        <h3>Total: R$ {{ pedido.total }}</h3>
+                        <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
 
                         <button class="btn_cancelar">
                             <i class="fas fa-xmark">Cancelar</i>
@@ -93,21 +88,14 @@
                             <i class="fas fa-check">Confirmar</i>
                         </button>
                     </div>
-
                     {% endfor %}
             </section>
             
-            <!--page historico-->
             <section class="historico" id="historico">
-
-
-            </section>
+                </section>
             
-            <!--page caixa  (somente aceivel a usuarios com nivel admin)-->
             <section class="caixa" id="caixa">
-
-
-            </section>
+                </section>
         </div>
     </main>
     <script src="{{ url_for('static', filename='js/projeto.js') }}"></script>
