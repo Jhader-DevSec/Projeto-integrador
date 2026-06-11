@@ -28,6 +28,15 @@ class Produto(db.Model):
     preco = db.Column(db.Numeric(10, 2), nullable=False)
     estoque = db.Column(db.Integer, nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
+    
+    # --- MODELO DOS USUÁRIOS (Mapeamento da Tabelausuarios) ---
+class Usuario(db.Model):
+    __tablename__ = 'usuarios'
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    senha = db.Column(db.String(255), nullable=False)
+    nivel_acesso = db.Column(db.String(20), nullable=False)
 
 # 3. CONFIGURAÇÃO DE SEGURANÇA (LIMITER)
 limiter = Limiter(
