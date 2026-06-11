@@ -16,7 +16,7 @@ app.secret_key = os.getenv(
     "SECRET_KEY",
     "chave_super_secreta_para_a_faculdade"
 )
-
+ 
 # ==========================================
 # CONFIGURAÇÃO MYSQL (RENDER + CLEVER CLOUD)
 # ==========================================
