@@ -54,14 +54,21 @@
                 {% endfor %}
 
                 <footer class="barra_informacao">
-                
                     <div class="caixa-total">
                         <h2>Total do Pedido:</h2>
                         <h3 id="valor-total">R$ 0,00</h3>
                     </div>
 
-                    <button>Fechar pedido</button>
-
+                    <div class="caixa-acoes-venda" style="display: flex; gap: 10px; align-items: center;">
+                        <select id="metodo-pagamento" style="padding: 10px; border-radius: 5px; border: 1px solid #E37D22; background: #222; color: #fff; cursor: pointer;">
+                            <option value="" disabled selected>Forma de Pagamento</option>
+                            <option value="Dinheiro">💵 Dinheiro</option>
+                            <option value="Pix">⚡ Pix</option>
+                            <option value="Cartão de Crédito">💳 Crédito</option>
+                            <option value="Cartão de Débito">💳 Débito</option>
+                        </select>
+                        <button id="btn-fechar-pedido">Fechar pedido</button>
+                    </div>
                 </footer>
             </section>
             
