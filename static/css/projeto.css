@@ -475,3 +475,20 @@ main {
     cursor: pointer;
     font-weight: bold;
 }
+
+#historico table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--cards-e-tabelas);
+}
+
+#historico th, #historico td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+#historico th {
+    color: var(--botao-e-icone);
+}

@@ -1,5 +1,20 @@
 // static/js/projeto.js
 
+// 6. HISTÓRICO: ABRIR MODAL COM DETALHES (Escopo Global)
+window.verDetalhes = function(id) {
+    fetch(`/pedidos/${id}/detalhes`)
+    .then(res => res.json())
+    .then(itens => {
+        const lista = document.getElementById('modal-itens');
+        lista.innerHTML = '';
+        itens.forEach(item => {
+            lista.innerHTML += `<li>${item.qtd} x ${item.nome}</li>`;
+        });
+        document.getElementById('modal-id').textContent = id;
+        document.getElementById('modal-historico').style.display = 'flex';
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // =========================================================================
@@ -112,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 elementoCardDOM.style.opacity = "0";
                 setTimeout(() => {
                     elementoCardDOM.remove();
-                    window.location.reload(); // Recarrega para atualizar a aba histórico automaticamente
+                    window.location.reload(); 
                 }, 400);
             } else {
                 alert(`Erro: ${data.erro}`);
@@ -134,36 +149,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // =========================================================================
-    // 6. HISTÓRICO: ABRIR MODAL COM DETALHES
-    // =========================================================================
-    window.verDetalhes = function(id) {
-        fetch(`/pedidos/${id}/detalhes`)
+    // Monitora clique no link "Caixa"
+    document.querySelector('a[href="#caixa"]').addEventListener('click', () => {
+        fetch('/caixa/resumo')
         .then(res => res.json())
-        .then(itens => {
-            const lista = document.getElementById('modal-itens');
-            lista.innerHTML = '';
-            itens.forEach(item => {
-                lista.innerHTML += `<li>${item.qtd} x ${item.nome}</li>`;
-            });
-            document.getElementById('modal-id').textContent = id;
-            document.getElementById('modal-historico').style.display = 'flex';
+        .then(data => {
+            document.getElementById('total-geral').textContent = `R$ ${data.total_geral.toFixed(2).replace('.', ',')}`;
+            
+            let htmlPagamentos = '<h4>Por Pagamento:</h4><ul>';
+            for (const [meio, qtd] of Object.entries(data.pagamentos)) {
+                htmlPagamentos += `<li>${meio}: ${qtd} vendas</li>`;
+            }
+            htmlPagamentos += '</ul>';
+            document.getElementById('detalhes-pagamento').innerHTML = htmlPagamentos;
         });
-    };
-});
-
-// Monitora clique no link "Caixa"
-document.querySelector('a[href="#caixa"]').addEventListener('click', () => {
-    fetch('/caixa/resumo')
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById('total-geral').textContent = `R$ ${data.total_geral.toFixed(2).replace('.', ',')}`;
-        
-        let htmlPagamentos = '<h4>Por Pagamento:</h4><ul>';
-        for (const [meio, qtd] of Object.entries(data.pagamentos)) {
-            htmlPagamentos += `<li>${meio}: ${qtd} vendas</li>`;
-        }
-        htmlPagamentos += '</ul>';
-        document.getElementById('detalhes-pagamento').innerHTML = htmlPagamentos;
     });
 });
