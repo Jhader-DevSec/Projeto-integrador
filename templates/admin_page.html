@@ -35,19 +35,15 @@
             <form action="{{ url_for('admin.admin_criar') }}" method="POST" class="admin-form">
                 <input type="email" name="email" placeholder="E-mail do funcionário" required>
                 <input type="password" name="senha" placeholder="Senha inicial" required>
-                
                 <select name="cargo" required>
                     <option value="" disabled selected>Escolha o Cargo</option>
                     <option value="Gerente">Gerente</option>
                     <option value="Vendedor">Vendedor</option>
                     <option value="Estoquista">Estoquista</option>
                 </select>
-
                 <button type="submit">Cadastrar</button>
             </form>
-        </section>
 
-        <section>
             <h2>Funcionários com Acesso ao Sistema</h2>
             <table class="user-table">
                 <thead>
@@ -63,17 +59,46 @@
                     <tr>
                         <td>{{ usuario.email }}</td>
                         <td>••••••••</td>
-                        <td>
-                            <span class="tag-cargo">
-                                {% if usuario.nivel_acesso == 'admin' %}Gerente{% else %}Funcionário{% endif %}
-                            </span>
-                        </td>
+                        <td><span class="tag-cargo">{% if usuario.nivel_acesso == 'admin' %}Gerente{% else %}Funcionário{% endif %}</span></td>
                         <td>
                             {% if usuario.email == 'admin@brasas.com' %}
                                 <em class="dono-sistema">Dono do Sistema</em>
                             {% else %}
                                 <a href="{{ url_for('admin.admin_deletar', email=usuario.email) }}" class="btn-delete" onclick="return confirm('Deseja mesmo remover o acesso de {{ usuario.email }}?')">Excluir</a>
                             {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Gerenciar Produtos</h2>
+            <form action="{{ url_for('admin.admin_cadastrar_produto') }}" method="POST" class="admin-form">
+                <input type="text" name="nome" placeholder="Nome do produto" required>
+                <input type="number" step="0.01" name="preco" placeholder="Preço (ex: 5.50)" required>
+                <input type="number" name="estoque" placeholder="Qtd Estoque" required>
+                <button type="submit">Adicionar Produto</button>
+            </form>
+
+            <table class="user-table" style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prod in produtos %}
+                    <tr>
+                        <td>{{ prod.nome }}</td>
+                        <td>R$ {{ "%.2f"|format(prod.preco) }}</td>
+                        <td>{{ prod.estoque }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.admin_remover_produto', id=prod.id) }}" class="btn-delete" onclick="return confirm('Deseja mesmo remover {{ prod.nome }}?')">Remover</a>
                         </td>
                     </tr>
                     {% endfor %}
