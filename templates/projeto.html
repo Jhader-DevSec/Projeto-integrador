@@ -99,12 +99,52 @@
             </section>
             
             <section class="historico" id="historico">
-                </section>
+                <h2>Histórico de Vendas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Pagamento</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos_historico %}
+                        <tr onclick="verDetalhes({{ pedido.id }})" style="cursor:pointer;">
+                            <td>#{{ pedido.id }}</td>
+                            <td>{{ pedido.data }}</td>
+                            <td>{{ pedido.pagamento }}</td>
+                            <td>R$ {{ "%.2f"|format(pedido.total) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
             
             <section class="caixa" id="caixa">
-                </section>
+                <h2>Fechamento de Caixa</h2>
+                <div class="caixa-resumo">
+                    <div class="card-financeiro">
+                        <h3>Total Vendido</h3>
+                        <p id="total-geral">R$ 0,00</p>
+                    </div>
+                    <div class="card-financeiro">
+                        <h3>Pedidos Concluídos</h3>
+                        <p id="total-pedidos">0</p>
+                    </div>
+                </div>
+                <div id="detalhes-pagamento" style="margin-top: 20px;"></div>
+            </section>
         </div>
     </main>
     <script src="{{ url_for('static', filename='js/projeto.js') }}"></script>
+    <div id="modal-historico">
+    <div class="conteudo-modal">
+        <h3>Detalhes do Pedido #<span id="modal-id"></span></h3>
+        <ul id="modal-itens"></ul>
+        <button onclick="document.getElementById('modal-historico').style.display='none'">Fechar</button>
+    </div>
+</div>
 </body>
 </html>

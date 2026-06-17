@@ -1,6 +1,7 @@
 # routes/vendas.py
 from flask import Blueprint, render_template, redirect, url_for, session, flash, request, jsonify
 from datetime import datetime
+from sqlalchemy import func
 
 vendas_bp = Blueprint('vendas', __name__)
 
@@ -44,7 +45,13 @@ def index():
                 "itens": itens_do_pedido
             })
             
-        return render_template('projeto.html', produtos=produtos_reais, pedidos_pendentes_fake=pedidos_reais_cozinha)
+        return render_template(
+            'projeto.html', 
+            produtos=produtos_reais, 
+            pedidos_pendentes_fake=pedidos_reais_cozinha,
+            pedidos_historico=[], # Inicialize vazio na página inicial
+            caixa_resumo={"total_geral": 0, "pagamentos": {}} # Inicialize vazio
+        )
         
     except Exception as e:
         print(f"Erro ao carregar dados do banco: {e}")
@@ -141,3 +148,41 @@ def atualizar_status(pedido_id):
         db.session.rollback()
         print(f"Erro ao alterar status do pedido {pedido_id}: {e}")
         return jsonify({"erro": "Erro ao atualizar status."}), 500
+    
+# rota para a aba historico
+@vendas_bp.route('/pedidos/historico')
+def historico():
+    from app import Pedido
+    # Busca apenas pedidos com status 'Concluído'
+    pedidos_concluidos = Pedido.query.filter_by(status='Concluído').order_by(Pedido.data_hora.desc()).all()
+    
+    lista_historico = []
+    for ped in pedidos_concluidos:
+        lista_historico.append({
+            "id": ped.id,
+            "total": float(ped.total),
+            "data": ped.data_hora.strftime('%d/%m/%Y %H:%M'),
+            "pagamento": ped.forma_pagamento
+        })
+    return render_template('projeto.html', pedidos_historico=lista_historico)
+
+@vendas_bp.route('/pedidos/<int:pedido_id>/detalhes')
+def detalhes_pedido(pedido_id):
+    from app import Pedido
+    pedido = Pedido.query.get_or_404(pedido_id)
+    detalhes = [{"nome": i.produto.nome, "qtd": i.quantidade} for i in pedido.itens]
+    return jsonify(detalhes)
+
+@vendas_bp.route('/caixa/resumo')
+def caixa_resumo():
+    from app import Pedido, db
+    # Soma total de todas as vendas concluídas
+    total = db.session.query(func.sum(Pedido.total)).filter_by(status='Concluído').scalar() or 0
+    
+    # Contagem por forma de pagamento
+    pagamentos = db.session.query(Pedido.forma_pagamento, func.count(Pedido.id)).filter_by(status='Concluído').group_by(Pedido.forma_pagamento).all()
+    
+    return jsonify({
+        "total_geral": float(total),
+        "pagamentos": dict(pagamentos)
+    })

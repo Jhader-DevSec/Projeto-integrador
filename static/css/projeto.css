@@ -416,3 +416,62 @@ main {
 .validacao_pedidos button:active {
     transform: translateY(0);
 }
+
+.caixa-resumo {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card-financeiro {
+    background: var(--cards-e-tabelas);
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    border-bottom: 4px solid var(--botao-e-icone);
+}
+
+.card-financeiro h3 { color: #a0a0a0; font-size: 0.9rem; }
+.card-financeiro p { color: white; font-size: 2rem; font-weight: bold; margin-top: 10px; }
+
+/* Estilo do Modal de Histórico */
+#modal-historico {
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.85); 
+    z-index: 1000; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.conteudo-modal {
+    background: var(--cards-e-tabelas); 
+    padding: 25px; 
+    border-radius: 12px; 
+    width: 320px; 
+    color: white;
+    border: 1px solid var(--botao-e-icone);
+    text-align: center;
+}
+
+.conteudo-modal ul {
+    list-style: none;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.conteudo-modal button {
+    width: 100%; 
+    padding: 10px; 
+    background: var(--botao-e-icone);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
