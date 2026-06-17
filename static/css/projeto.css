@@ -1,82 +1,479 @@
 /* ===================================================
-   1. VARIÁVEIS DE CORES
+   1. O RESET E SUAS VARIÁVEIS DE COR ORIGINAIS
    =================================================== */
-:root {
-    --fundo-principal: #121212;
-    --cards-e-tabelas: #1e1e1e;
-    --botao-e-icone: #E37D22;
-    --textos: #ffffff;
-    --texto-secundario: #a0a0a0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+:root {
+    --fundo-principal: #1A1A1A;
+    --cards-e-tabelas: #2D2D2D;
+    --botao-e-icone: #E37D22;
+    --textos: #F5F5F5;
+    --bordas: #8B4513;
+}
+
+/* ===================================================
+   2. O CHÃO DO SISTEMA (O comportamento de Aplicativo)
+   =================================================== */
 body {
+    height: 100vh;
     background-color: var(--fundo-principal);
     color: var(--textos);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 /* ===================================================
-   2. HEADER E NAVEGAÇÃO
+   3. O TOPO FIXO (A Barra de Navegação de Duas Linhas)
    =================================================== */
 header {
-    background: var(--cards-e-tabelas);
-    padding: 20px;
-    border-bottom: 2px solid var(--botao-e-icone);
+    background-color: var(--cards-e-tabelas);
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid var(--bordas);
+    padding: 15px 20px 10px 20px;
+    gap: 15px;
 }
 
-.header-top { display: flex; justify-content: space-between; align-items: center; }
-.logo-title { display: flex; align-items: center; gap: 15px; }
-.logo-title img { width: 50px; }
+.header-top {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+}
 
-nav { display: flex; gap: 20px; margin-top: 20px; }
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-title img {
+    height: 40px;
+    width: auto;
+}
+
+.logo-title h1 {
+    font-size: 1.4rem;
+    color: var(--textos);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-admin {
+    color: var(--textos);
+    text-decoration: none;
+    font-size: 0.95rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--botao-e-icone);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-admin:hover {
+    background-color: var(--botao-e-icone);
+    color: white;
+}
+
+.btn-logout {
+    color: var(--textos);
+    text-decoration: none;
+    font-size: 0.95rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background-color: #721c24;
+    border-color: #f5c6cb;
+}
+
+nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+}
+
 nav a {
     color: var(--textos);
     text-decoration: none;
-    font-weight: bold;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background 0.3s;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 6px 20px;
+    transition: color 0.3s ease;
 }
-nav a:hover { background: var(--botao-e-icone); }
+
+nav a:hover {
+    color: var(--botao-e-icone);
+}
 
 /* ===================================================
-   3. LAYOUT PRINCIPAL E CARDS DE VENDA
+   4. A JANELA VISÍVEL E O TRILHO
    =================================================== */
-main { padding: 20px; }
+main {
+    flex: 1;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+}
+
+.rail {
+    display: flex;
+    width: 400%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.rail section {
+    width: 100vw;
+    height: 100%;
+    padding: 30px;
+    background-color: var(--fundo-principal);
+    display: flex;
+    flex-direction: column;
+    position: relative;          /* Transforma a tela na âncora do rodapé */
+    padding-bottom: 130px;       /* Abre um espaço de segurança no fundo da tela */
+}
+
+/* ===================================================
+   5. OS CARDS DE PRODUTOS (Aba Vendas)
+   =================================================== */
+.vender {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    align-content: start;
+    overflow-y: auto;
+}
 
 .produto-card {
-    background: var(--cards-e-tabelas);
-    padding: 15px;
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.produto-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--botao-e-icone);
+}
+
+.produto-card h3 {
+    font-size: 1.2rem;
+    color: var(--textos);
+    margin-bottom: 4px;
+}
+
+.produto-card .preco {
+    color: var(--botao-e-icone);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.produto-card .estoque-disponivel {
+    font-size: 0.85rem;
+    color: #a0a0a0;
     margin-bottom: 10px;
+}
+
+/* ===================================================
+   6. OS BOTÕES DO CARRINHO
+   =================================================== */
+.botoes-carrinho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--fundo-principal);
+    padding: 6px 14px;
+    border-radius: 20px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.botoes-carrinho button {
+    background: none;
+    border: none;
+    color: var(--textos);
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.botoes-carrinho .btn-mais:hover {
+    color: #28a745;
+}
+
+.botoes-carrinho .btn-menos:hover {
+    color: #dc3545;
+}
+
+.botoes-carrinho .qtd-item {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--textos);
+    min-width: 25px;
+    text-align: center;
+}
+
+/* ===================================================
+   7. ATUALIZAÇÃO DA BARRA DE INFORMAÇÃO (RODAPÉ)
+   =================================================== */
+.barra_informacao {
+    grid-column: 1 / -1;
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid var(--bordas);
+    border-radius: 12px;
+    height: 85px;
+    padding: 0 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #333;
+    position: absolute;   /* Desprende a barra e permite flutuar */
+    bottom: 30px;         /* Fixa a exatamente 30px do chão da tela */
+    left: 30px;           /* Fixa a 30px da borda esquerda */
+    right: 30px;          /* Fixa a 30px da borda direita */
+    width: auto;          /* Deixa o left e o right definirem a largura automática */
+    z-index: 10;          /* Garante que ela fique por cima de qualquer espetinho */
 }
 
-.btn-mais, .btn-menos {
-    background: var(--botao-e-icone);
-    border: none;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.1s;
+.caixa-total {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
-.btn-mais:active, .btn-menos:active { transform: scale(0.9); }
+
+.caixa-total h2 {
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.caixa-total h3 {
+    font-size: 1.7rem;
+    color: var(--textos);
+    font-weight: 700;
+}
+
+.barra_informacao button {
+    background-color: var(--botao-e-icone);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.barra_informacao button:hover {
+    background-color: #ff933b;
+    transform: scale(1.02);
+}
+
+.barra_informacao button:active {
+    transform: scale(0.98);
+}
 
 /* ===================================================
-   4. COZINHA E HISTÓRICO
+   8. OS CARDS DA COZINHA (Aba Cozinha)
    =================================================== */
+
+/* Transforma a seção da cozinha em uma grade de cards responsiva */
+.cozinha {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    align-content: start;
+    overflow-y: auto;
+}
+
+/* Estilização estrutural do card de cada pedido */
 .validacao_pedidos {
+    background-color: var(--cards-e-tabelas);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 4px solid var(--botao-e-icone); /* Linha temática no topo do card */
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    color: var(--textos);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* Caixa interna que isola a lista de espetinhos a preparar */
+.validacao_pedidos ul {
+    list-style: none;
+    background-color: var(--fundo-principal);
+    padding: 12px;
+    border-radius: 8px;
+    margin: 8px 0;
+    border-left: 4px solid var(--botao-e-icone);
+}
+
+/* Cada linha de espetinho dentro da lista */
+.validacao_pedidos li {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 6px 0;
+    color: #e0e0e0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Remove a linha divisória do último espetinho da lista */
+.validacao_pedidos li:last-child {
+    border-bottom: none;
+}
+
+/* Alinhamento e destaque do valor total do pedido */
+.validacao_pedidos h3 {
+    font-size: 1.3rem;
+    color: var(--textos);
+    margin: 5px 0 10px 0;
+    font-weight: 700;
+    text-align: right;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 10px;
+}
+
+/* Configuração base para os botões de ação da cozinha */
+.validacao_pedidos button {
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    width: 100%; /* Botões ocupam a largura total para facilitar o toque */
+}
+
+/* Estilo do Botão Cancelar (X) */
+.validacao_pedidos .btn_cancelar {
+    background-color: #3d1d1d;
+    border: 1px solid #721c24;
+    color: #f5c6cb;
+    margin-top: 5px;
+}
+
+.validacao_pedidos .btn_cancelar:hover {
+    background-color: #721c24;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Estilo do Botão Confirmar (Check) */
+.validacao_pedidos .btn_confirmar {
+    background-color: #1d3d24;
+    border: 1px solid #28a745;
+    color: #c3e6cb;
+}
+
+.validacao_pedidos .btn_confirmar:hover {
+    background-color: #28a745;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Efeito de clique nos botões */
+.validacao_pedidos button:active {
+    transform: translateY(0);
+}
+
+.caixa-resumo {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card-financeiro {
     background: var(--cards-e-tabelas);
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 15px;
-    border-left: 5px solid var(--botao-e-icone);
+    flex: 1;
+    text-align: center;
+    border-bottom: 4px solid var(--botao-e-icone);
+}
+
+.card-financeiro h3 { color: #a0a0a0; font-size: 0.9rem; }
+.card-financeiro p { color: white; font-size: 2rem; font-weight: bold; margin-top: 10px; }
+
+/* Estilo do Modal de Histórico */
+#modal-historico {
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.85); 
+    z-index: 1000; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.conteudo-modal {
+    background: var(--cards-e-tabelas); 
+    padding: 25px; 
+    border-radius: 12px; 
+    width: 320px; 
+    color: white;
+    border: 1px solid var(--botao-e-icone);
+    text-align: center;
+}
+
+.conteudo-modal ul {
+    list-style: none;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.conteudo-modal button {
+    width: 100%; 
+    padding: 10px; 
+    background: var(--botao-e-icone);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 #historico table {
@@ -84,106 +481,14 @@ main { padding: 20px; }
     border-collapse: collapse;
     margin-top: 20px;
     background: var(--cards-e-tabelas);
-    border-radius: 10px;
-    overflow: hidden;
 }
 
 #historico th, #historico td {
-    padding: 15px;
+    padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #333;
-}
-#historico th { color: var(--botao-e-icone); }
-#historico tbody tr:hover { background-color: #252525; }
-
-/* ===================================================
-   5. CAIXA (DASHBOARD FINANCEIRO)
-   =================================================== */
-.caixa-resumo { display: flex; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
-
-.card-financeiro {
-    background: var(--cards-e-tabelas);
-    padding: 30px;
-    border-radius: 15px;
-    flex: 1;
-    min-width: 250px;
-    text-align: center;
-    border-bottom: 4px solid var(--botao-e-icone);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    border-bottom: 1px solid #444;
 }
 
-.card-financeiro h3 { color: var(--texto-secundario); font-size: 0.9rem; text-transform: uppercase; }
-.card-financeiro p { font-size: 2.2rem; font-weight: 800; margin-top: 10px; }
-
-#detalhes-pagamento { background: var(--cards-e-tabelas); padding: 25px; border-radius: 15px; margin-top: 20px; }
-#detalhes-pagamento ul { list-style: none; display: flex; gap: 20px; padding: 0; flex-wrap: wrap; }
-#detalhes-pagamento li {
-    background: rgba(227, 125, 34, 0.1);
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: 1px solid var(--botao-e-icone);
+#historico th {
+    color: var(--botao-e-icone);
 }
-
-/* ===================================================
-   6. MODAL DE DETALHES
-   =================================================== */
-#modal-historico {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.conteudo-modal {
-    background: var(--cards-e-tabelas);
-    padding: 30px;
-    border-radius: 10px;
-    width: 300px;
-    text-align: center;
-    border: 1px solid var(--botao-e-icone);
-}
-
-.conteudo-modal button {
-    margin-top: 20px;
-    width: 100%;
-    padding: 10px;
-    background: var(--botao-e-icone);
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-/* Efeito de carregamento para botões */
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Spinner simples para carregar dados */
-.spinner {
-    border: 4px solid rgba(255, 255, 255, 0.1);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border-left-color: var(--botao-e-icone);
-    animation: spin 1s linear infinite;
-    display: inline-block;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Barra de rolagem personalizada e elegante */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--fundo-principal); }
-::-webkit-scrollbar-thumb { 
-    background: #333; 
-    border-radius: 10px; 
-}
-::-webkit-scrollbar-thumb:hover { background: var(--botao-e-icone); }
