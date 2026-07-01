@@ -191,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Cozinheiro manda para a esteira de entrega (Andamento)
     document.querySelectorAll(".btn_pronto_retirada").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -199,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Entregador/Garçom finaliza e move para o Histórico concluído
     document.querySelectorAll(".btn_concluir_entrega").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -207,7 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Cancelamento operacional de pedidos
     document.querySelectorAll(".btn_cancelar").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -260,20 +257,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =========================================================================
-    // 7. GERENCIAMENTO DE ABAS ATIVAS E MOVIMENTAÇÃO DO TRILHO (5 SEÇÕES)
+    // 7. GERENCIAMENTO DE ABAS ATIVAS E MOVIMENTAÇÃO DINÂMICA DO TRILHO
     // =========================================================================
     function gerenciarIndicadorAba() {
         const hashAtual = window.location.hash || "#vendas";
         
-        // 🔥 ALINHAMENTO CORRIGIDO: Ordem indexada idêntica à física do HTML
-        const abasOrdem = ["#vendas", "#andamento", "#cozinha", "#historico", "#caixa"];
-        const index = abasOrdem.indexOf(hashAtual);
+        // 🔥 INTELIGÊNCIA DE DESLIZAMENTO: Mapeia dinamicamente a posição física real
+        const secoesVisiveis = Array.from(document.querySelectorAll(".rail section"));
+        const idAlvo = hashAtual.replace("#", "");
+        const secaoAlvo = document.getElementById(idAlvo);
         
-        const rail = document.querySelector(".rail");
-        if (rail && index !== -1) {
-            rail.style.transform = `translateX(-${index * 100}vw)`;
+        if (secaoAlvo) {
+            const indexReal = secoesVisiveis.indexOf(secaoAlvo);
+            const rail = document.querySelector(".rail");
+            if (rail && indexReal !== -1) {
+                rail.style.transform = `translateX(-${indexReal * 100}vw)`;
+            }
         }
 
+        // Ilumina o link ativo no menu superior
         linksNavegacao.forEach(link => {
             if (link.getAttribute("href") === hashAtual) {
                 link.classList.add("active");

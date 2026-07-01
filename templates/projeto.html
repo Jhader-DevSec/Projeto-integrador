@@ -19,14 +19,14 @@
                 {% if session['nivel_acesso'] == 'admin' %}
                     <a href="{{ url_for('admin.admin_panel') }}" class="btn-admin">Painel Admin 🛠️</a>
                 {% endif %}
-                
                 <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair 🔒</a>
             </div>
         </div>
 
         <nav>
             <a href="#vendas">Vender</a>
-            <a href="#andamento">Andamento</a> <a href="#cozinha">Cozinha</a>     {% if session['nivel_acesso'] == 'admin' %}
+            <a href="#andamento">Andamento</a> <a href="#cozinha">Cozinha</a>
+            {% if session['nivel_acesso'] == 'admin' %}
                 <a href="#historico">Histórico</a>
                 <a href="#caixa">Caixa</a>
             {% endif %}
@@ -60,7 +60,6 @@
 
                     <div class="caixa-acoes-venda">
                         <input type="number" id="numero-mesa" placeholder="Nº Mesa" min="1">
-
                         <select id="metodo-pagamento">
                             <option value="" disabled selected>Forma de Pagamento</option>
                             <option value="Dinheiro">💵 Dinheiro</option>
@@ -87,9 +86,7 @@
 
                         <ul>
                             {% for item in pedido.itens %}
-                            <li>
-                                {{ item.quantidade }} x {{ item.nome }}
-                            </li>
+                            <li>{{ item.quantidade }} x {{ item.nome }}</li>
                             {% endfor %}
                         </ul>
                         <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
@@ -101,8 +98,8 @@
                     {% endfor %}
                 {% else %}
                     <div class="mensagem-vazia">
-                        <i class="fas fa-boxes-packing"></i>
-                        <p>Nenhum espetinho aguardando entrega ou retirada.</p>
+                        <i class="fas fa-paper-plane" style="font-size: 3rem; color: var(--botao-e-icone); margin-bottom: 15px;"></i>
+                        <p style="font-size: 1.2rem; color: var(--texto-secundario);">Nenhum espetinho aguardando retirada no momento.</p>
                     </div>
                 {% endif %}
             </section>
@@ -121,9 +118,7 @@
 
                         <ul>
                             {% for item in pedido.itens %}
-                            <li>
-                                {{ item.quantidade }} x {{ item.nome }}
-                            </li>
+                            <li>{{ item.quantidade }} x {{ item.nome }}</li>
                             {% endfor %}
                         </ul>
                         <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
@@ -131,7 +126,6 @@
                         <button class="btn_pronto_retirada">
                             <i class="fas fa-fire-burner" style="margin-right: 8px;"></i>Pronto para Retirada
                         </button>
-                        
                         <button class="btn_cancelar">
                             <i class="fas fa-xmark" style="margin-right: 8px;"></i>Cancelar Pedido
                         </button>
@@ -139,8 +133,8 @@
                     {% endfor %}
                 {% else %}
                     <div class="mensagem-vazia">
-                        <i class="fas fa-kitchen-set"></i>
-                        <p>Churrasqueira limpa! Nenhum pedido pendente na cozinha.</p>
+                        <i class="fas fa-kitchen-set" style="font-size: 3rem; color: var(--botao-e-icone); margin-bottom: 15px;"></i>
+                        <p style="font-size: 1.2rem; color: var(--texto-secundario);">Churrasqueira limpa! Nenhum pedido pendente de preparo.</p>
                     </div>
                 {% endif %}
             </section>
@@ -154,7 +148,6 @@
 
                     <div class="caixa-filtros">
                         <input type="text" id="busca-historico-id" placeholder="Buscar por ID ou Nº Mesa..." onkeyup="filtrarHistoricoTela()">
-                        
                         <select id="busca-historico-pagamento" onchange="filtrarHistoricoTela()">
                             <option value="">Todas as Formas de Pagamento</option>
                             <option value="Dinheiro">Dinheiro</option>
@@ -212,9 +205,7 @@
                             <h3>Total Faturado no Turno</h3>
                             <p id="caixa-total-geral">R$ 0,00</p>
                         </div>
-                        
-                        <div class="grid-faturamento-metodos" id="caixa-pagamentos-detalhes">
-                            </div>
+                        <div class="grid-faturamento-metodos" id="caixa-pagamentos-detalhes"></div>
                     </div>
                 </section>
             {% endif %}

@@ -134,7 +134,7 @@ nav a.active {
 }
 
 /* ===================================================
-   4. A JANELA VISÍVEL E O TRILHO (5 SEÇÕES)
+   4. A JANELA VISÍVEL E O TRILHO
    =================================================== */
 main {
     flex: 1;
@@ -152,6 +152,7 @@ main {
 
 .rail section {
     width: 100vw;
+    flex-shrink: 0; /* 🔥 CRUCIAL: Bloqueia o encolhimento e desalinha de telas */
     height: 100%;
     padding: 30px;
     background-color: var(--fundo-principal);
@@ -454,7 +455,7 @@ main {
 
 .mensagem-vazia i {
     font-size: 3.5rem;
-    color: rgba(227, 125, 34, 0.15); /* Cor temática de espetaria com opacidade */
+    color: rgba(227, 125, 34, 0.15); 
 }
 
 .mensagem-vazia p {
