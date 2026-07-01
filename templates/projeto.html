@@ -27,8 +27,10 @@
         <nav>
             <a href="#vendas">Vender</a>
             <a href="#cozinha">Cozinha</a>
-            <a href="#historico">Histórico</a>
-            <a href="#caixa">Caixa</a>
+            {% if session['nivel_acesso'] == 'admin' %}
+                <a href="#historico">Histórico</a>
+                <a href="#caixa">Caixa</a>
+            {% endif %}
         </nav>
     </header>
 
@@ -103,81 +105,79 @@
                 {% endfor %}
             </section>
             
-            <section class="historico" id="historico">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
-                    <h2>Histórico de Vendas</h2>
-                    {% if session['nivel_acesso'] == 'admin' %}
-                        <button onclick="limparHistoricoGeral()" class="btn-menos" style="background-color: #C0392B; padding: 10px 15px; font-weight: bold; border: none; color: white; border-radius: 6px; cursor: pointer;">\uD83D\uDDD1 Limpar Histórico (Backup PDF)</button>
-                    {% endif %}
-                </div>
-
-                <div class="caixa-filtros">
-                    <input type="text" id="busca-historico-id" placeholder="Buscar por ID ou Nº Mesa..." onkeyup="filtrarHistoricoTela()">
-                    
-                    <select id="busca-historico-pagamento" onchange="filtrarHistoricoTela()">
-                        <option value="">Todas as Formas de Pagamento</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Pix">Pix</option>
-                        <option value="Cartão de Crédito">Crédito</option>
-                        <option value="Cartão de Débito">Débito</option>
-                    </select>
-                </div>
-
-                <div id="container-grupos-historico">
-                    {% for dia, pedidos in pedidos_historico %}
-                    <div class="bloco-dia" data-dia="{{ dia }}">
-                        <h3 style="color: var(--botao-e-icone); font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">📅 Pedidos de {{ dia }}</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Horário</th>
-                                    <th>Atendimento</th>
-                                    <th>Pagamento</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for pedido in pedidos %}
-                                <tr class="linha-pedido-historico" data-id="{{ pedido.id }}" data-mesa="{{ pedido.numero_mesa or '' }}" data-pagamento="{{ pedido.pagamento }}" onclick="verDetalhes({{ pedido.id }})" style="cursor:pointer;">
-                                    <td>#{{ pedido.id }}</td>
-                                    <td>{{ pedido.data_hora }}</td>
-                                    <td>{% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}</td>
-                                    <td>{{ pedido.pagamento }}</td>
-                                    <td>
-                                        <span style="padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; background: {% if pedido.status == 'Concluído' %}rgba(39,174,96,0.2); color: #27AE60{% else %}rgba(192,57,43,0.2); color: #C0392B{% endif %};">
-                                            {{ pedido.status }}
-                                        </span>
-                                    </td>
-                                    <td>R$ {{ "%.2f"|format(pedido.total) }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+            {% if session['nivel_acesso'] == 'admin' %}
+                <section class="historico" id="historico">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
+                        <h2>Histórico de Vendas</h2>
+                        <button onclick="limparHistoricoGeral()" class="btn-menos" style="background-color: #C0392B; padding: 10px 15px; font-weight: bold; border: none; color: white; border-radius: 6px; cursor: pointer;">🗑️ Limpar Histórico (Backup PDF)</button>
                     </div>
-                    {% endfor %}
-                </div>
-            </section>
-            
-            <section class="caixa" id="caixa">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
-                    <h2>Fechamento de Caixa</h2>
-                    {% if session['nivel_acesso'] == 'admin' %}
-                        <button onclick="realizarFechamentoCaixa()" class="btn-menos" style="background-color: var(--botao-e-icone); padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; color: white; cursor: pointer;">🔒 Fechar Caixa (Zerar Dia)</button>
-                    {% endif %}
-                </div>
 
-                <div class="caixa-resumo-master">
-                    <div class="card-financeiro-total">
-                        <h3>Total Faturado no Turno</h3>
-                        <p id="caixa-total-geral">R$ 0,00</p>
+                    <div class="caixa-filtros">
+                        <input type="text" id="busca-historico-id" placeholder="Buscar por ID ou Nº Mesa..." onkeyup="filtrarHistoricoTela()">
+                        
+                        <select id="busca-historico-pagamento" onchange="filtrarHistoricoTela()">
+                            <option value="">Todas as Formas de Pagamento</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Crédito</option>
+                            <option value="Cartão de Débito">Débito</option>
+                        </select>
                     </div>
-                    
-                    <div class="grid-faturamento-metodos" id="caixa-pagamentos-detalhes">
+
+                    <div id="container-grupos-historico">
+                        {% for dia, pedidos in pedidos_historico %}
+                        <div class="bloco-dia" data-dia="{{ dia }}">
+                            <h3 style="color: var(--botao-e-icone); font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">📅 Pedidos de {{ dia }}</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Horário</th>
+                                        <th>Atendimento</th>
+                                        <th>Pagamento</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pedido in pedidos %}
+                                    <tr class="linha-pedido-historico" data-id="{{ pedido.id }}" data-mesa="{{ pedido.numero_mesa or '' }}" data-pagamento="{{ pedido.pagamento }}" onclick="verDetalhes({{ pedido.id }})" style="cursor:pointer;">
+                                        <td>#{{ pedido.id }}</td>
+                                        <td>{{ pedido.data_hora }}</td>
+                                        <td>{% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}</td>
+                                        <td>{{ pedido.pagamento }}</td>
+                                        <td>
+                                            <span style="padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; background: {% if pedido.status == 'Concluído' %}rgba(39,174,96,0.2); color: #27AE60{% else %}rgba(192,57,43,0.2); color: #C0392B{% endif %};">
+                                                {{ pedido.status }}
+                                            </span>
+                                        </td>
+                                        <td>R$ {{ "%.2f"|format(pedido.total) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
-                </div>
-            </section>
+                        {% endfor %}
+                    </div>
+                </section>
+                
+                <section class="caixa" id="caixa">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
+                        <h2>Fechamento de Caixa</h2>
+                        <button onclick="realizarFechamentoCaixa()" class="btn-menos" style="background-color: var(--botao-e-icone); padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; color: white; cursor: pointer;">🔒 Fechar Caixa (Zerar Dia)</button>
+                    </div>
+
+                    <div class="caixa-resumo-master">
+                        <div class="card-financeiro-total">
+                            <h3>Total Faturado no Turno</h3>
+                            <p id="caixa-total-geral">R$ 0,00</p>
+                        </div>
+                        
+                        <div class="grid-faturamento-metodos" id="caixa-pagamentos-detalhes">
+                            </div>
+                    </div>
+                </section>
+            {% endif %}
         </div>
     </main>
 

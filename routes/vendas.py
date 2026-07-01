@@ -30,29 +30,31 @@ def index():
                 "itens": [{"quantidade": i.quantidade, "nome": i.produto.nome} for i in ped.itens]
             })
         
-        # 3. BUSCA HISTÓRICO (AGRUPADO POR DIA)
-        # Traz tanto concluídos quanto cancelados ordenados dos mais recentes para os mais antigos
-        pedidos_historico_banco = Pedido.query.filter(Pedido.status.in_(['Concluído', 'Cancelado'])).order_by(Pedido.data_hora.desc()).all()
-        
-        historico_por_dia = defaultdict(list)
-        for ped in pedidos_historico_banco:
-            # Cria a chave do grupo por data (DD/MM/AAAA)
-            dia = ped.data_hora.strftime('%d/%m/%Y')
-            historico_por_dia[dia].append({
-                "id": ped.id,
-                "total": float(ped.total),
-                "data_hora": ped.data_hora.strftime('%H:%M'),  # Exibe apenas o horário dentro do grupo
-                "pagamento": ped.forma_pagamento,
-                "numero_mesa": ped.numero_mesa,
-                "status": ped.status
-            })
-        
-        # Ordena os blocos de dias de forma decrescente para o Jinja2
-        lista_historico_agrupada = sorted(
-            historico_por_dia.items(), 
-            key=lambda x: datetime.strptime(x[0], '%d/%m/%Y'), 
-            reverse=True
-        )
+        # 3. BARREIRA DE SEGURANÇA: BUSCA HISTÓRICO APENAS SE FOR GERENTE (ADMIN)
+        lista_historico_agrupada = []
+        if session.get('nivel_acesso') == 'admin':
+            # Traz tanto concluídos quanto cancelados ordenados dos mais recentes para os mais antigos
+            pedidos_historico_banco = Pedido.query.filter(Pedido.status.in_(['Concluído', 'Cancelado'])).order_by(Pedido.data_hora.desc()).all()
+            
+            historico_por_dia = defaultdict(list)
+            for ped in pedidos_historico_banco:
+                # Cria a chave do grupo por data (DD/MM/AAAA)
+                dia = ped.data_hora.strftime('%d/%m/%Y')
+                historico_por_dia[dia].append({
+                    "id": ped.id,
+                    "total": float(ped.total),
+                    "data_hora": ped.data_hora.strftime('%H:%M'),  # Exibe apenas o horário dentro do grupo
+                    "pagamento": ped.forma_pagamento,
+                    "numero_mesa": ped.numero_mesa,
+                    "status": ped.status
+                })
+            
+            # Ordena os blocos de dias de forma decrescente para o Jinja2
+            lista_historico_agrupada = sorted(
+                historico_por_dia.items(), 
+                key=lambda x: datetime.strptime(x[0], '%d/%m/%Y'), 
+                reverse=True
+            )
             
         return render_template(
             'projeto.html', 
@@ -164,17 +166,13 @@ def caixa_resumo():
         
     from app import Pedido, db
     try:
-        # Calcula o somatório geral bruto de vendas concluídas
         total = db.session.query(func.sum(Pedido.total)).filter_by(status='Concluído').scalar() or 0
-        
-        # Calcula o somatório de valores agrupados por método de pagamento
-        pagamentos_query = db.session.query(
+        pagamentos = db.session.query(
             Pedido.forma_pagamento, 
             func.sum(Pedido.total)
         ).filter_by(status='Concluído').group_by(Pedido.forma_pagamento).all()
         
-        # Converte o resultado da query em um dicionário legível para o JSON {Método: Valor}
-        pagamentos_faturados = {forma: float(valor) for forma, valor in pagamentos_query}
+        pagamentos_faturados = {forma: float(valor) for forma, valor in pagamentos}
         
         return jsonify({
             "total_geral": float(total), 

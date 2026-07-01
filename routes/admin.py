@@ -107,13 +107,17 @@ def admin_cadastrar_produto():
         preco = request.form.get('preco')
         estoque = request.form.get('estoque')
         
-        novo_produto = Produto(nome=nome, preco=float(preco), estoque=int(estoque))
+        # 🔥 CORREÇÃO: Captura ou define uma categoria para não quebrar a restrição do banco
+        categoria = request.form.get('categoria', 'Espetinhos')
+        
+        novo_produto = Produto(nome=nome, preco=float(preco), estoque=int(estoque), categoria=categoria)
         db.session.add(novo_produto)
         db.session.commit()
         flash(f'Produto {nome} cadastrado com sucesso!', 'sucesso')
-    except Exception:
+    except Exception as e:
         db.session.rollback()
-        flash("Erro ao cadastrar produto.", "erro")
+        print(f"Erro ao cadastrar produto: {e}")
+        flash("Erro ao cadastrar produto. Verifique se as informações estão corretas.", "erro")
     return redirect(url_for('admin.admin_panel'))
 
 
@@ -123,15 +127,22 @@ def admin_remover_produto(id):
         flash('Acesso negado! Nível de privilégios insuficiente.', 'erro')
         return redirect(url_for('vendas.index'))
     
-    from app import db, Produto
+    from app import db, Produto, ItensPedido
     try:
         produto = Produto.query.get(id)
         if produto:
+            # 🔥 CORREÇÃO: Varre se o item está preso a alguma venda antes de tentar deletar
+            item_vinculado = ItensPedido.query.filter_by(produto_id=id).first()
+            if item_vinculado:
+                flash(f'Não é possível remover "{produto.nome}" porque ele possui vendas ativas no histórico! Dica: Use o botão de Limpar Histórico primeiro.', 'erro')
+                return redirect(url_for('admin.admin_panel'))
+
             db.session.delete(produto)
             db.session.commit()
             flash('Produto removido do catálogo com sucesso!', 'sucesso')
-    except Exception:
+    except Exception as e:
         db.session.rollback()
+        print(f"Erro ao remover produto: {e}")
         flash("Erro ao remover produto.", "erro")
     return redirect(url_for('admin.admin_panel'))
 
