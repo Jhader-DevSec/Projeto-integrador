@@ -134,7 +134,7 @@ nav a.active {
 }
 
 /* ===================================================
-   4. A JANELA VISÍVEL E O TRILHO (ATUALIZADO PARA 5 ABAS)
+   4. A JANELA VISÍVEL E O TRILHO (5 SEÇÕES)
    =================================================== */
 main {
     flex: 1;
@@ -145,7 +145,7 @@ main {
 
 .rail {
     display: flex;
-    width: 500%; /* 🔥 Expandido de 400% para 500% devido à nova aba */
+    width: 500%; 
     height: 100%;
     transition: transform 0.5s ease-in-out;
 }
@@ -437,6 +437,29 @@ main {
 .validacao_pedidos .btn_concluir_entrega:hover {
     background-color: var(--sucesso);
     color: white;
+}
+
+/* 🔥 ESTILIZAÇÃO DO INDICATIVO DE TELA VAZIA */
+.mensagem-vazia {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 80px 20px;
+    color: var(--texto-secundario);
+    text-align: center;
+}
+
+.mensagem-vazia i {
+    font-size: 3.5rem;
+    color: rgba(227, 125, 34, 0.15); /* Cor temática de espetaria com opacidade */
+}
+
+.mensagem-vazia p {
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
 /* ===================================================

@@ -26,8 +26,7 @@
 
         <nav>
             <a href="#vendas">Vender</a>
-            <a href="#cozinha">Cozinha</a>
-            <a href="#andamento">Andamento</a> {% if session['nivel_acesso'] == 'admin' %}
+            <a href="#andamento">Andamento</a> <a href="#cozinha">Cozinha</a>     {% if session['nivel_acesso'] == 'admin' %}
                 <a href="#historico">Histórico</a>
                 <a href="#caixa">Caixa</a>
             {% endif %}
@@ -74,62 +73,76 @@
                 </footer>
             </section>
             
-            <section class="cozinha" id="cozinha">
-                {% for pedido in pedidos_pendentes_fake %}
-                <div class="validacao_pedidos" data-id="{{ pedido.id }}">
-                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px;">
-                        <span>Pedido #{{ pedido.id }}</span>
-                        <span style="color: var(--botao-e-icone);">
-                            {% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}
-                        </span>
+            <section class="andamento" id="andamento">
+                {% if pedidos_andamento %}
+                    {% for pedido in pedidos_andamento %}
+                    <div class="validacao_pedidos" data-id="{{ pedido.id }}">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px;">
+                            <span>Pedido #{{ pedido.id }}</span>
+                            <span style="color: #27AE60;">
+                                {% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}
+                            </span>
+                        </div>
+                        <small style="color: #27AE60; display: block; margin-bottom: 10px; font-weight: bold;">⚡ Status: Pronto para Retirada</small>
+
+                        <ul>
+                            {% for item in pedido.itens %}
+                            <li>
+                                {{ item.quantidade }} x {{ item.nome }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
+
+                        <button class="btn_concluir_entrega">
+                            <i class="fas fa-check" style="margin-right: 8px;"></i>Confirmar Entrega (Concluir)
+                        </button>
                     </div>
-                    <small style="color: var(--texto-secundario); display: block; margin-bottom: 10px;">Pagamento: {{ pedido.forma_pagamento }}</small>
-
-                    <ul>
-                        {% for item in pedido.itens %}
-                        <li>
-                            {{ item.quantidade }} x {{ item.nome }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
-
-                    <button class="btn_pronto_retirada">
-                        <i class="fas fa-fire-burner" style="margin-right: 8px;"></i>Pronto para Retirada
-                    </button>
-                    
-                    <button class="btn_cancelar">
-                        <i class="fas fa-xmark" style="margin-right: 8px;"></i>Cancelar Pedido
-                    </button>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <div class="mensagem-vazia">
+                        <i class="fas fa-boxes-packing"></i>
+                        <p>Nenhum espetinho aguardando entrega ou retirada.</p>
+                    </div>
+                {% endif %}
             </section>
 
-            <section class="andamento" id="andamento">
-                {% for pedido in pedidos_andamento %}
-                <div class="validacao_pedidos" data-id="{{ pedido.id }}">
-                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px;">
-                        <span>Pedido #{{ pedido.id }}</span>
-                        <span style="color: #27AE60;">
-                            {% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}
-                        </span>
+            <section class="cozinha" id="cozinha">
+                {% if pedidos_pendentes_fake %}
+                    {% for pedido in pedidos_pendentes_fake %}
+                    <div class="validacao_pedidos" data-id="{{ pedido.id }}">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px;">
+                            <span>Pedido #{{ pedido.id }}</span>
+                            <span style="color: var(--botao-e-icone);">
+                                {% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}
+                            </span>
+                        </div>
+                        <small style="color: var(--texto-secundario); display: block; margin-bottom: 10px;">Pagamento: {{ pedido.forma_pagamento }}</small>
+
+                        <ul>
+                            {% for item in pedido.itens %}
+                            <li>
+                                {{ item.quantidade }} x {{ item.nome }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
+
+                        <button class="btn_pronto_retirada">
+                            <i class="fas fa-fire-burner" style="margin-right: 8px;"></i>Pronto para Retirada
+                        </button>
+                        
+                        <button class="btn_cancelar">
+                            <i class="fas fa-xmark" style="margin-right: 8px;"></i>Cancelar Pedido
+                        </button>
                     </div>
-                    <small style="color: #27AE60; display: block; margin-bottom: 10px; font-weight: bold;">⚡ Status: Pronto para Retirada</small>
-
-                    <ul>
-                        {% for item in pedido.itens %}
-                        <li>
-                            {{ item.quantidade }} x {{ item.nome }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
-
-                    <button class="btn_concluir_entrega">
-                        <i class="fas fa-check" style="margin-right: 8px;"></i>Confirmar Entrega (Concluir)
-                    </button>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <div class="mensagem-vazia">
+                        <i class="fas fa-kitchen-set"></i>
+                        <p>Churrasqueira limpa! Nenhum pedido pendente na cozinha.</p>
+                    </div>
+                {% endif %}
             </section>
             
             {% if session['nivel_acesso'] == 'admin' %}

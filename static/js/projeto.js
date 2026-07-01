@@ -20,7 +20,7 @@ window.verDetalhes = function(id) {
 // =========================================================================
 window.filtrarHistoricoTela = function() {
     const termoBusca = document.getElementById("busca-historico-id").value.toLowerCase();
-    const filtroPagamento = document.getElementById("busca-historico-pagamento").value;
+    const filterPagamento = document.getElementById("busca-historico-pagamento").value;
     const blocosDias = document.querySelectorAll(".bloco-dia");
 
     blocosDias.forEach(bloco => {
@@ -28,12 +28,12 @@ window.filtrarHistoricoTela = function() {
         let linhasVisiveisNoDia = 0;
 
         linhas.forEach(linha => {
-            const id = Apparentemente = linha.getAttribute("data-id").toLowerCase();
+            const id = linha.getAttribute("data-id").toLowerCase();
             const mesa = linha.getAttribute("data-mesa").toLowerCase();
             const pagamento = linha.getAttribute("data-pagamento");
 
             const bateIdOuMesa = id.includes(termoBusca) || mesa.includes(termoBusca);
-            const batePagamento = !filtroPagamento || pagamento === filtroPagamento;
+            const batePagamento = !filterPagamento || pagamento === filterPagamento;
 
             if (bateIdOuMesa && batePagamento) {
                 linha.style.display = "";
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Gatilho 1: Cozinheiro avança o pedido para a esteira de entrega
+    // Cozinheiro manda para a esteira de entrega (Andamento)
     document.querySelectorAll(".btn_pronto_retirada").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Gatilho 2: Entregador/Garçom finaliza e encerra o ciclo de vida do pedido
+    // Entregador/Garçom finaliza e move para o Histórico concluído
     document.querySelectorAll(".btn_concluir_entrega").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Gatilho 3: Cancelamento de pedido em aberto
+    // Cancelamento operacional de pedidos
     document.querySelectorAll(".btn_cancelar").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -265,17 +265,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function gerenciarIndicadorAba() {
         const hashAtual = window.location.hash || "#vendas";
         
-        // Mapeia rigidamente a ordem física das abas para calcular o deslizamento
-        const abasOrdem = ["#vendas", "#cozinha", "#andamento", "#historico", "#caixa"];
+        // 🔥 ALINHAMENTO CORRIGIDO: Ordem indexada idêntica à física do HTML
+        const abasOrdem = ["#vendas", "#andamento", "#cozinha", "#historico", "#caixa"];
         const index = abasOrdem.indexOf(hashAtual);
         
-        // Desliza a tela principal fisicamente no eixo X
         const rail = document.querySelector(".rail");
         if (rail && index !== -1) {
             rail.style.transform = `translateX(-${index * 100}vw)`;
         }
 
-        // Altera as tags ativas para laranja
         linksNavegacao.forEach(link => {
             if (link.getAttribute("href") === hashAtual) {
                 link.classList.add("active");
