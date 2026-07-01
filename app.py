@@ -80,6 +80,9 @@ class Pedido(db.Model):
         nullable=False
     )
 
+    # 🔥 COLUNA ADICIONADA: Vincula os pedidos às mesas no código do ORM
+    numero_mesa = db.Column(db.Integer, nullable=True)
+
     usuario_id = db.Column(
         db.Integer,
         db.ForeignKey("usuarios.id"),
