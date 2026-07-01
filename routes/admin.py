@@ -208,3 +208,83 @@ def limpar_historico_pdf():
         print(f"Erro crítico no expurgo e backup de dados: {e}")
         flash("Erro ao processar a exclusão e geração do backup no banco de dados.", "erro")
         return redirect(url_for('admin.admin_panel'))
+    
+    @admin_bp.route('/admin/caixa/zerar-e-exportar')
+def zerar_caixa_pdf():
+    if session.get('nivel_acesso') != 'admin':
+        flash('Acesso negado!', 'erro')
+        return redirect(url_for('vendas.index'))
+
+    from app import db, Pedido
+    try:
+        # Coleta os pedidos concluídos do caixa atual
+        pedidos = Pedido.query.filter_by(status='Concluído').order_by(Pedido.data_hora.asc()).all()
+        
+        if not pedidos:
+            flash('Não há vendas registradas no caixa atual para fechamento.', 'erro')
+            return redirect(url_for('vendas.index'))
+
+        # Consolidação financeira por método de pagamento para o cabeçalho do PDF
+        total_geral = 0
+        resumo_metodos = {'Dinheiro': 0.0, 'Pix': 0.0, 'Cartão de Crédito': 0.0, 'Cartão de Débito': 0.0}
+        
+        for p in pedidos:
+            total_geral += float(p.total)
+            if p.forma_pagamento in resumo_metodos:
+                resumo_metodos[p.forma_pagamento] += float(p.total)
+
+        # Geração do documento PDF na memória RAM
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+        elementos = []
+        
+        styles = getSampleStyleSheet()
+        estilo_titulo = ParagraphStyle('TituloRelatorio', parent=styles['Heading1'], fontSize=22, leading=26, textColor=colors.HexColor('#E37D22'), spaceAfter=15)
+        estilo_sub = ParagraphStyle('SubRelatorio', parent=styles['Normal'], fontSize=11, leading=14, spaceAfter=5)
+        
+        elementos.append(Paragraph("🍢 Espetinho do Edir - Fechamento de Caixa Oficial", estilo_titulo))
+        elementos.append(Paragraph(f"Data de Emissão: {datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}", styles['Normal']))
+        elementos.append(Spacer(1, 15))
+        
+        # Bloco consolidado de faturamento por método no PDF
+        elementos.append(Paragraph("<b>RESUMO DE FATURAMENTO POR MÉTODO:</b>", styles['Normal']))
+        for metodo, valor in resumo_metodos.items():
+            elementos.append(Paragraph(f"• {metodo}: R$ {valor:.2f}", estilo_sub))
+        elementos.append(Paragraph(f"<b>FATURAMENTO TOTAL DO TURNO: R$ {total_geral:.2f}</b>", styles['Normal']))
+        elementos.append(Spacer(1, 20))
+        
+        # Tabela analítica de auditoria de pedidos
+        dados_tabela = [['ID Pedido', 'Horário', 'Atendimento', 'Forma Pagto', 'Valor']]
+        for p in pedidos:
+            local = f"Mesa {p.numero_mesa}" if p.numero_mesa else "Balcão"
+            dados_tabela.append([f"#{p.id}", p.data_hora.strftime('%H:%M'), local, p.forma_pagamento, f"R$ {p.total:.2f}"])
+            
+        tabela = Table(dados_tabela, colWidths=[80, 100, 110, 130, 110])
+        tabela.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2D2D2D')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor('#E37D22')),
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0,0), (-1,0), 8),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#444444')),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#F5F5F5')])
+        ]))
+        elementos.append(tabela)
+        doc.build(elementos)
+        
+        # Altera o status dos pedidos para 'Arquivado' ou remove-os para zerar o caixa ativo
+        for p in pedidos:
+            db.session.delete(p)
+        db.session.commit()
+        
+        buffer.seek(0)
+        response = make_response(buffer.getvalue())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename=Fechamento_Caixa_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
+        return response
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro no fechamento do caixa: {e}")
+        flash("Erro operacional ao tentar fechar o caixa.", "erro")
+        return redirect(url_for('vendas.index'))

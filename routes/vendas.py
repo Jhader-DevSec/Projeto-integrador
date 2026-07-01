@@ -164,12 +164,21 @@ def caixa_resumo():
         
     from app import Pedido, db
     try:
+        # Calcula o somatório geral bruto de vendas concluídas
         total = db.session.query(func.sum(Pedido.total)).filter_by(status='Concluído').scalar() or 0
-        pagamentos = db.session.query(
+        
+        # Calcula o somatório de valores agrupados por método de pagamento
+        pagamentos_query = db.session.query(
             Pedido.forma_pagamento, 
-            func.count(Pedido.id)
+            func.sum(Pedido.total)
         ).filter_by(status='Concluído').group_by(Pedido.forma_pagamento).all()
         
-        return jsonify({"total_geral": float(total), "pagamentos": dict(pagamentos)})
+        # Converte o resultado da query em um dicionário legível para o JSON {Método: Valor}
+        pagamentos_faturados = {forma: float(valor) for forma, valor in pagamentos_query}
+        
+        return jsonify({
+            "total_geral": float(total), 
+            "pagamentos": pagamentos_faturados
+        })
     except Exception as e:
         return jsonify({"erro": f"Erro interno de processamento: {str(e)}"}), 500

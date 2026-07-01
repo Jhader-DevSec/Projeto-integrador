@@ -156,18 +156,20 @@
             </section>
             
             <section class="caixa" id="caixa">
-                <h2>Fechamento de Caixa</h2>
-                <div class="caixa-resumo">
-                    <div class="card-financeiro">
-                        <h3>Total Vendido</h3>
-                        <p id="total-geral">R$ 0,00</p>
-                    </div>
-                    <div class="card-financeiro">
-                        <h3>Pedidos Concluídos</h3>
-                        <p id="total-pedidos">0</p>
-                    </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
+                    <h2>Fechamento de Caixa</h2>
+                    <button onclick="realizarFechamentoCaixa()" class="btn-menos" style="background-color: var(--botao-e-icone); padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; color: white; cursor: pointer;">🔒 Fechar Caixa (Zerar Dia)</button>
                 </div>
-                <div id="detalhes-pagamento" style="margin-top: 20px;"></div>
+
+                <div class="caixa-resumo-master">
+                    <div class="card-financeiro-total">
+                        <h3>Total Faturado no Turno</h3>
+                        <p id="caixa-total-geral">R$ 0,00</p>
+                    </div>
+                    
+                    <div class="grid-faturamento-metodos" id="caixa-pagamentos-detalhes">
+                        </div>
+                </div>
             </section>
         </div>
     </main>
