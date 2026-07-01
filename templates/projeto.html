@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/projeto.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Espetinho do Edir</title>
 </head>
 <body>
@@ -37,11 +38,8 @@
                 {% for id, produto in produtos.items() %}
                     {% if produto.estoque > 0 %}
                         <div class="produto-card" data-id="{{ id }}" data-preco="{{ produto.preco }}" data-estoque="{{ produto.estoque }}">
-            
                             <h3>{{ produto.nome }}</h3>
-            
                             <p class="preco">R$ {{ "%.2f"|format(produto.preco) }}</p>
-            
                             <p class="estoque-disponivel">Disponível: {{ produto.estoque }} un</p>
             
                             <div class="botoes-carrinho">
@@ -59,8 +57,10 @@
                         <h3 id="valor-total">R$ 0,00</h3>
                     </div>
 
-                    <div class="caixa-acoes-venda" style="display: flex; gap: 10px; align-items: center;">
-                        <select id="metodo-pagamento" style="padding: 10px; border-radius: 5px; border: 1px solid #E37D22; background: #222; color: #fff; cursor: pointer;">
+                    <div class="caixa-acoes-venda">
+                        <input type="number" id="numero-mesa" placeholder="Nº Mesa" min="1">
+
+                        <select id="metodo-pagamento">
                             <option value="" disabled selected>Forma de Pagamento</option>
                             <option value="Dinheiro">💵 Dinheiro</option>
                             <option value="Pix">⚡ Pix</option>
@@ -73,43 +73,48 @@
             </section>
             
             <section class="cozinha" id="cozinha">
-                    {% for pedido in pedidos_pendentes_fake %}
-                    <div class="validacao_pedidos" data-id="{{ pedido.id }}">
-                         Pedido #{{ pedido.id }}
-                        {{ pedido.forma_pagamento }}
-
-                        <ul>
-                                {% for item in pedido.itens %}
-                                <li>
-                                    {{ item.quantidade }} x {{ item.nome}}
-                                </li>
-                                {% endfor %}
-                        </ul>
-                        <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
-
-                        <button class="btn_cancelar">
-                            <i class="fas fa-xmark">Cancelar</i>
-                        </button>
-
-                        <button class="btn_confirmar">
-                            <i class="fas fa-check">Confirmar</i>
-                        </button>
+                {% for pedido in pedidos_pendentes_fake %}
+                <div class="validacao_pedidos" data-id="{{ pedido.id }}">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px;">
+                        <span>Pedido #{{ pedido.id }}</span>
+                        <span style="color: var(--botao-e-icone);">
+                            {% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}
+                        </span>
                     </div>
-                    {% endfor %}
+                    <small style="color: var(--texto-secundario); display: block; margin-bottom: 10px;">Pagamento: {{ pedido.forma_pagamento }}</small>
+
+                    <ul>
+                        {% for item in pedido.itens %}
+                        <li>
+                            {{ item.quantidade }} x {{ item.nome }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
+
+                    <button class="btn_confirmar">
+                        <i class="fas fa-check" style="margin-right: 8px;"></i>Confirmar Conclusão
+                    </button>
+                    
+                    <button class="btn_cancelar">
+                        <i class="fas fa-xmark" style="margin-right: 8px;"></i>Cancelar Pedido
+                    </button>
+                </div>
+                {% endfor %}
             </section>
             
             <section class="historico" id="historico">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
                     <h2>Histórico de Vendas</h2>
                     {% if session['nivel_acesso'] == 'admin' %}
-                        <button onclick="limparHistoricoGeral()" class="btn-menos" style="background-color: #C0392B; padding: 10px 15px; font-weight: bold;">🧹 Limpar Histórico (Backup PDF)</button>
+                        <button onclick="limparHistoricoGeral()" class="btn-menos" style="background-color: #C0392B; padding: 10px 15px; font-weight: bold; border: none; color: white; border-radius: 6px; cursor: pointer;">\uD83D\uDDD1 Limpar Histórico (Backup PDF)</button>
                     {% endif %}
                 </div>
 
-                <div class="caixa-filtros" style="display: flex; gap: 15px; margin-bottom: 25px; background: var(--cards-e-tabelas); padding: 15px; border-radius: 8px;">
-                    <input type="text" id="busca-historico-id" placeholder="Buscar por ID ou Nº Mesa..." onkeyup="filtrarHistoricoTela()" style="padding: 10px; background: var(--fundo-principal); border: 1px solid #444; color: white; border-radius: 5px; flex: 1;">
+                <div class="caixa-filtros">
+                    <input type="text" id="busca-historico-id" placeholder="Buscar por ID ou Nº Mesa..." onkeyup="filtrarHistoricoTela()">
                     
-                    <select id="busca-historico-pagamento" onchange="filtrarHistoricoTela()" style="padding: 10px; background: var(--fundo-principal); border: 1px solid #444; color: white; border-radius: 5px; width: 220px;">
+                    <select id="busca-historico-pagamento" onchange="filtrarHistoricoTela()">
                         <option value="">Todas as Formas de Pagamento</option>
                         <option value="Dinheiro">Dinheiro</option>
                         <option value="Pix">Pix</option>
@@ -120,7 +125,7 @@
 
                 <div id="container-grupos-historico">
                     {% for dia, pedidos in pedidos_historico %}
-                    <div class="bloco-dia" data-dia="{{ dia }}" style="margin-bottom: 30px;">
+                    <div class="bloco-dia" data-dia="{{ dia }}">
                         <h3 style="color: var(--botao-e-icone); font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">📅 Pedidos de {{ dia }}</h3>
                         <table>
                             <thead>
@@ -158,7 +163,9 @@
             <section class="caixa" id="caixa">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--botao-e-icone); padding-bottom: 10px; margin-bottom: 20px;">
                     <h2>Fechamento de Caixa</h2>
-                    <button onclick="realizarFechamentoCaixa()" class="btn-menos" style="background-color: var(--botao-e-icone); padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; color: white; cursor: pointer;">🔒 Fechar Caixa (Zerar Dia)</button>
+                    {% if session['nivel_acesso'] == 'admin' %}
+                        <button onclick="realizarFechamentoCaixa()" class="btn-menos" style="background-color: var(--botao-e-icone); padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; color: white; cursor: pointer;">🔒 Fechar Caixa (Zerar Dia)</button>
+                    {% endif %}
                 </div>
 
                 <div class="caixa-resumo-master">
@@ -173,13 +180,15 @@
             </section>
         </div>
     </main>
-    <script src="{{ url_for('static', filename='js/projeto.js') }}"></script>
+
     <div id="modal-historico">
-    <div class="conteudo-modal">
-        <h3>Detalhes do Pedido #<span id="modal-id"></span></h3>
-        <ul id="modal-itens"></ul>
-        <button onclick="document.getElementById('modal-historico').style.display='none'">Fechar</button>
+        <div class="conteudo-modal">
+            <h3>Detalhes do Pedido #<span id="modal-id"></span></h3>
+            <ul id="modal-itens"></ul>
+            <button onclick="document.getElementById('modal-historico').style.display='none'">Fechar Janela</button>
+        </div>
     </div>
-</div>
+
+    <script src="{{ url_for('static', filename='js/projeto.js') }}"></script>
 </body>
 </html>
