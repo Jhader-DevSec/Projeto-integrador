@@ -1,19 +1,27 @@
 # routes/admin.py
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, make_response
+from datetime import datetime
+import io
+
+# Dependências necessárias para a exportação de relatórios gerenciais em PDF
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
 
 admin_bp = Blueprint('admin', __name__)
 
 # --- PAINEL PRINCIPAL ---
 @admin_bp.route('/admin')
 def admin_panel():
-    # Barreira de segurança: Acesso restrito a admin
-    if session.get('nivel_acesso') != 'admin':
-        flash('Acesso negado! Área restrita para administradores.', 'erro')
+    # Permite a entrada apenas de Gerentes (admin) e Estoquistas
+    nivel = session.get('nivel_acesso')
+    if nivel not in ['admin', 'estoquista']:
+        flash('Acesso negado! Área restrita.', 'erro')
         return redirect(url_for('vendas.index'))
 
     from app import Usuario, Produto
     try:
-        # Busca ambas as listas para exibir no painel
         usuarios_banco = Usuario.query.all()
         produtos_banco = Produto.query.all()
         return render_template('admin_page.html', usuarios=usuarios_banco, produtos=produtos_banco)
@@ -22,20 +30,31 @@ def admin_panel():
         flash("Erro ao conectar com o banco de dados.", "erro")
         return redirect(url_for('vendas.index'))
 
-# --- ROTAS DE USUÁRIOS ---
+
+# --- ROTAS DE USUÁRIOS (Acesso exclusivo do Gerente) ---
+
 @admin_bp.route('/admin/criar', methods=['POST'])
 def admin_criar():
-    if session.get('nivel_acesso') != 'admin': return redirect(url_for('auth.login_page'))
+    if session.get('nivel_acesso') != 'admin':
+        flash('Acesso negado! Permissão restrita a gerentes.', 'erro')
+        return redirect(url_for('vendas.index'))
 
     email = request.form.get('email')
     senha = request.form.get('senha')
     cargo = request.form.get('cargo') 
-    nivel_acesso = 'admin' if cargo == 'Gerente' else 'funcionario'
+
+    # Mapeia as opções literais do formulário HTML para os escopos de RBAC do sistema
+    cargo_map = {
+        'Gerente': 'admin',
+        'Estoquista': 'estoquista',
+        'Vendedor': 'vendedor'
+    }
+    nivel_acesso = cargo_map.get(cargo, 'vendedor')
 
     from app import db, Usuario
     try:
         if Usuario.query.filter_by(email=email).first():
-            flash(f'O usuário {email} já existe.', 'erro')
+            flash(f'O usuário {email} já existe no sistema.', 'erro')
         else:
             nome_padrao = email.split('@')[0].capitalize()
             novo_usuario = Usuario(nome=nome_padrao, email=email, senha=senha, nivel_acesso=nivel_acesso)
@@ -44,15 +63,19 @@ def admin_criar():
             flash(f'Usuário {email} cadastrado com sucesso!', 'sucesso')
     except Exception as e:
         db.session.rollback()
+        print(f"Erro ao salvar usuário: {e}")
         flash("Erro interno ao salvar usuário.", "erro")
     return redirect(url_for('admin.admin_panel'))
 
+
 @admin_bp.route('/admin/deletar/<email>')
 def admin_deletar(email):
-    if session.get('nivel_acesso') != 'admin': return redirect(url_for('auth.login_page'))
+    if session.get('nivel_acesso') != 'admin':
+        flash('Acesso negado! Permissão restrita a gerentes.', 'erro')
+        return redirect(url_for('vendas.index'))
 
     if email == session.get('usuario_logado'):
-        flash('Você não pode deletar a si mesmo!', 'erro')
+        flash('Você não pode deletar a sua própria conta ativa!', 'erro')
         return redirect(url_for('admin.admin_panel'))
 
     from app import db, Usuario
@@ -61,16 +84,22 @@ def admin_deletar(email):
         if usuario:
             db.session.delete(usuario)
             db.session.commit()
-            flash(f'Usuário {email} removido.', 'sucesso')
+            flash(f'Usuário {email} removido do sistema.', 'sucesso')
+        else:
+            flash('Usuário não encontrado.', 'erro')
     except Exception:
         db.session.rollback()
         flash("Erro ao excluir usuário.", "erro")
     return redirect(url_for('admin.admin_panel'))
 
-# --- ROTAS DE PRODUTOS ---
+
+# --- ROTAS DE PRODUTOS (Acesso permitido para Gerente e Estoquista) ---
+
 @admin_bp.route('/admin/produto/cadastrar', methods=['POST'])
 def admin_cadastrar_produto():
-    if session.get('nivel_acesso') != 'admin': return redirect(url_for('auth.login_page'))
+    if session.get('nivel_acesso') not in ['admin', 'estoquista']:
+        flash('Acesso negado! Nível de privilégios insuficiente.', 'erro')
+        return redirect(url_for('vendas.index'))
     
     from app import db, Produto
     try:
@@ -81,15 +110,18 @@ def admin_cadastrar_produto():
         novo_produto = Produto(nome=nome, preco=float(preco), estoque=int(estoque))
         db.session.add(novo_produto)
         db.session.commit()
-        flash(f'Produto {nome} cadastrado!', 'sucesso')
+        flash(f'Produto {nome} cadastrado com sucesso!', 'sucesso')
     except Exception:
         db.session.rollback()
         flash("Erro ao cadastrar produto.", "erro")
     return redirect(url_for('admin.admin_panel'))
 
+
 @admin_bp.route('/admin/produto/remover/<int:id>')
 def admin_remover_produto(id):
-    if session.get('nivel_acesso') != 'admin': return redirect(url_for('auth.login_page'))
+    if session.get('nivel_acesso') not in ['admin', 'estoquista']:
+        flash('Acesso negado! Nível de privilégios insuficiente.', 'erro')
+        return redirect(url_for('vendas.index'))
     
     from app import db, Produto
     try:
@@ -97,8 +129,82 @@ def admin_remover_produto(id):
         if produto:
             db.session.delete(produto)
             db.session.commit()
-            flash('Produto removido!', 'sucesso')
+            flash('Produto removido do catálogo com sucesso!', 'sucesso')
     except Exception:
         db.session.rollback()
         flash("Erro ao remover produto.", "erro")
     return redirect(url_for('admin.admin_panel'))
+
+
+# --- ROTA DE AUDITORIA: LIMPEZA DE BANCO E EXPURGO EM PDF (Apenas Gerente) ---
+
+@admin_bp.route('/admin/historico/limpar-e-exportar')
+def limpar_historico_pdf():
+    if session.get('nivel_acesso') != 'admin':
+        flash('Acesso negado! Apenas gerentes podem expurgar dados financeiros.', 'erro')
+        return redirect(url_for('vendas.index'))
+
+    from app import db, Pedido
+    try:
+        # Coleta os registros históricos elegíveis para expurgo (Concluídos e Cancelados)
+        pedidos = Pedido.query.filter(Pedido.status.in_(['Concluído', 'Cancelado'])).order_by(Pedido.data_hora.desc()).all()
+        
+        if not pedidos:
+            flash('Não existem registros no histórico para exportação.', 'erro')
+            return redirect(url_for('admin.admin_panel'))
+
+        # Inicializa o buffer binário para construir o documento na memória RAM antes do download
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+        elementos = []
+        
+        styles = getSampleStyleSheet()
+        estilo_titulo = ParagraphStyle('TituloRelatorio', parent=styles['Heading1'], fontSize=22, leading=26, textColor=colors.HexColor('#E37D22'), spaceAfter=15)
+        
+        elementos.append(Paragraph("🍢 Espetinho do Edir - Relatório de Fechamento", estilo_titulo))
+        elementos.append(Paragraph(f"Backup de Histórico extraído em: {datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}", styles['Normal']))
+        elementos.append(Spacer(1, 20))
+        
+        # Estruturação e modelagem matricial da tabela de dados do relatório
+        dados_tabela = [['ID Pedido', 'Data / Hora', 'Atendimento', 'Forma Pagto', 'Status', 'Valor Total']]
+        for p in pedidos:
+            local = f"Mesa {p.numero_mesa}" if p.numero_mesa else "Balcão"
+            dados_tabela.append([
+                f"#{p.id}",
+                p.data_hora.strftime('%d/%m/%Y %H:%M'),
+                local,
+                p.forma_pagamento,
+                p.status,
+                f"R$ {p.total:.2f}"
+            ])
+            
+        tabela = Table(dados_tabela, colWidths=[60, 110, 90, 100, 80, 90])
+        tabela.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#E37D22')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0,0), (-1,0), 8),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#444444')),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#F5F5F5')])
+        ]))
+        elementos.append(tabela)
+        doc.build(elementos)
+        
+        # Purga segura dos registros do banco após a validação estrutural do PDF
+        for p in pedidos:
+            db.session.delete(p)
+        db.session.commit()
+        
+        # Retrocede o ponteiro do stream binário para transmissão via HTTP
+        buffer.seek(0)
+        response = make_response(buffer.getvalue())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename=Historico_Espetinho_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
+        return response
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro crítico no expurgo e backup de dados: {e}")
+        flash("Erro ao processar a exclusão e geração do backup no banco de dados.", "erro")
+        return redirect(url_for('admin.admin_panel'))

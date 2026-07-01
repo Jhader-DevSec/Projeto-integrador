@@ -12,7 +12,10 @@
     --cards-e-tabelas: #2D2D2D;
     --botao-e-icone: #E37D22;
     --textos: #F5F5F5;
+    --texto-secundario: #a0a0a0;
     --bordas: #8B4513;
+    --perigo: #C0392B;
+    --sucesso: #27AE60;
 }
 
 /* ===================================================
@@ -99,7 +102,7 @@ header {
 }
 
 .btn-logout:hover {
-    background-color: #721c24;
+    background-color: var(--perigo);
     border-color: #f5c6cb;
 }
 
@@ -148,8 +151,8 @@ main {
     background-color: var(--fundo-principal);
     display: flex;
     flex-direction: column;
-    position: relative;          /* Transforma a tela na âncora do rodapé */
-    padding-bottom: 130px;       /* Abre um espaço de segurança no fundo da tela */
+    position: relative;
+    padding-bottom: 130px; /* Margem para flutuação do rodapé */
 }
 
 /* ===================================================
@@ -196,7 +199,7 @@ main {
 
 .produto-card .estoque-disponivel {
     font-size: 0.85rem;
-    color: #a0a0a0;
+    color: var(--texto-secundario);
     margin-bottom: 10px;
 }
 
@@ -230,11 +233,11 @@ main {
 }
 
 .botoes-carrinho .btn-mais:hover {
-    color: #28a745;
+    color: var(--sucesso);
 }
 
 .botoes-carrinho .btn-menos:hover {
-    color: #dc3545;
+    color: var(--perigo);
 }
 
 .botoes-carrinho .qtd-item {
@@ -246,7 +249,7 @@ main {
 }
 
 /* ===================================================
-   7. ATUALIZAÇÃO DA BARRA DE INFORMAÇÃO (RODAPÉ)
+   7. BARRA DE INFORMAÇÃO COMPACTA (RODAPÉ DO PDV)
    =================================================== */
 .barra_informacao {
     grid-column: 1 / -1;
@@ -258,12 +261,12 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: absolute;   /* Desprende a barra e permite flutuar */
-    bottom: 30px;         /* Fixa a exatamente 30px do chão da tela */
-    left: 30px;           /* Fixa a 30px da borda esquerda */
-    right: 30px;          /* Fixa a 30px da borda direita */
-    width: auto;          /* Deixa o left e o right definirem a largura automática */
-    z-index: 10;          /* Garante que ela fique por cima de qualquer espetinho */
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    width: auto;
+    z-index: 10;
 }
 
 .caixa-total {
@@ -274,7 +277,7 @@ main {
 
 .caixa-total h2 {
     font-size: 0.85rem;
-    color: #a0a0a0;
+    color: var(--texto-secundario);
     text-transform: uppercase;
     letter-spacing: 0.8px;
 }
@@ -285,7 +288,33 @@ main {
     font-weight: 700;
 }
 
-.barra_informacao button {
+/* Estilização para o formulário interno da barra de fechamento */
+.caixa-acoes-venda {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.caixa-acoes-venda input, .caixa-acoes-venda select {
+    padding: 10px;
+    background-color: var(--fundo-principal);
+    border: 1px solid #444;
+    color: white;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.caixa-acoes-venda input:focus, .caixa-acoes-venda select:focus {
+    border-color: var(--botao-e-icone);
+}
+
+.caixa-acoes-venda input[type="number"] {
+    width: 95px;
+}
+
+.barra_informacao button#btn-fechar-pedido {
     background-color: var(--botao-e-icone);
     color: white;
     border: none;
@@ -298,20 +327,14 @@ main {
     transition: background-color 0.2s, transform 0.1s;
 }
 
-.barra_informacao button:hover {
+.barra_informacao button#btn-fechar-pedido:hover {
     background-color: #ff933b;
-    transform: scale(1.02);
-}
-
-.barra_informacao button:active {
-    transform: scale(0.98);
+    transform: translateY(-1px);
 }
 
 /* ===================================================
    8. OS CARDS DA COZINHA (Aba Cozinha)
    =================================================== */
-
-/* Transforma a seção da cozinha em uma grade de cards responsiva */
 .cozinha {
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -320,23 +343,18 @@ main {
     overflow-y: auto;
 }
 
-/* Estilização estrutural do card de cada pedido */
 .validacao_pedidos {
     background-color: var(--cards-e-tabelas);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    border-top: 4px solid var(--botao-e-icone); /* Linha temática no topo do card */
+    border-top: 4px solid var(--botao-e-icone);
     border-radius: 12px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    color: var(--textos);
-    font-size: 1.05rem;
-    font-weight: 600;
 }
 
-/* Caixa interna que isola a lista de espetinhos a preparar */
 .validacao_pedidos ul {
     list-style: none;
     background-color: var(--fundo-principal);
@@ -346,7 +364,6 @@ main {
     border-left: 4px solid var(--botao-e-icone);
 }
 
-/* Cada linha de espetinho dentro da lista */
 .validacao_pedidos li {
     font-size: 1.1rem;
     font-weight: 500;
@@ -355,12 +372,10 @@ main {
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* Remove a linha divisória do último espetinho da lista */
 .validacao_pedidos li:last-child {
     border-bottom: none;
 }
 
-/* Alinhamento e destaque do valor total do pedido */
 .validacao_pedidos h3 {
     font-size: 1.3rem;
     color: var(--textos);
@@ -371,21 +386,20 @@ main {
     padding-top: 10px;
 }
 
-/* Configuração base para os botões de ação da cozinha */
 .validacao_pedidos button {
     border: none;
     padding: 12px;
     border-radius: 8px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    width: 100%; /* Botões ocupam a largura total para facilitar o toque */
+    width: 100%;
 }
 
-/* Estilo do Botão Cancelar (X) */
 .validacao_pedidos .btn_cancelar {
     background-color: #3d1d1d;
     border: 1px solid #721c24;
@@ -394,12 +408,10 @@ main {
 }
 
 .validacao_pedidos .btn_cancelar:hover {
-    background-color: #721c24;
+    background-color: var(--perigo);
     color: white;
-    transform: translateY(-2px);
 }
 
-/* Estilo do Botão Confirmar (Check) */
 .validacao_pedidos .btn_confirmar {
     background-color: #1d3d24;
     border: 1px solid #28a745;
@@ -407,16 +419,74 @@ main {
 }
 
 .validacao_pedidos .btn_confirmar:hover {
-    background-color: #28a745;
+    background-color: var(--sucesso);
     color: white;
-    transform: translateY(-2px);
 }
 
-/* Efeito de clique nos botões */
-.validacao_pedidos button:active {
-    transform: translateY(0);
+/* ===================================================
+   9. ABA HISTÓRICO AVANÇADO (NOVO)
+   =================================================== */
+#historico {
+    overflow-y: auto;
 }
 
+.caixa-filtros {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    background: var(--cards-e-tabelas);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.caixa-filtros input, .caixa-filtros select {
+    padding: 11px;
+    background: var(--fundo-principal);
+    border: 1px solid #444;
+    color: white;
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.caixa-filtros input:focus, .caixa-filtros select:focus {
+    border-color: var(--botao-e-icone);
+}
+
+.bloco-dia {
+    margin-bottom: 30px;
+}
+
+#historico table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: var(--cards-e-tabelas);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#historico th, #historico td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+#historico th {
+    color: var(--botao-e-icone);
+    background-color: rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+}
+
+#historico tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* ===================================================
+   10. ABA CAIXA & FINANCEIRO
+   =================================================== */
 .caixa-resumo {
     display: flex;
     gap: 20px;
@@ -430,12 +500,25 @@ main {
     flex: 1;
     text-align: center;
     border-bottom: 4px solid var(--botao-e-icone);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.card-financeiro h3 { color: #a0a0a0; font-size: 0.9rem; }
-.card-financeiro p { color: white; font-size: 2rem; font-weight: bold; margin-top: 10px; }
+.card-financeiro h3 { 
+    color: var(--texto-secundario); 
+    font-size: 0.9rem; 
+    text-transform: uppercase;
+}
 
-/* Estilo do Modal de Histórico */
+.card-financeiro p { 
+    color: white; 
+    font-size: 2rem; 
+    font-weight: bold; 
+    margin-top: 10px; 
+}
+
+/* ===================================================
+   11. MODAL DETALHES DO HISTÓRICO
+   =================================================== */
 #modal-historico {
     display: none; 
     position: fixed; 
@@ -453,42 +536,44 @@ main {
     background: var(--cards-e-tabelas); 
     padding: 25px; 
     border-radius: 12px; 
-    width: 320px; 
+    width: 340px; 
     color: white;
     border: 1px solid var(--botao-e-icone);
     text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .conteudo-modal ul {
     list-style: none;
     margin: 20px 0;
     text-align: left;
+    background: var(--fundo-principal);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.conteudo-modal li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.conteudo-modal li:last-child {
+    border-bottom: none;
 }
 
 .conteudo-modal button {
     width: 100%; 
-    padding: 10px; 
+    padding: 12px; 
     background: var(--botao-e-icone);
     border: none;
     color: white;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.2s;
 }
 
-#historico table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: var(--cards-e-tabelas);
-}
-
-#historico th, #historico td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #444;
-}
-
-#historico th {
-    color: var(--botao-e-icone);
+.conteudo-modal button:hover {
+    background-color: #ff933b;
 }

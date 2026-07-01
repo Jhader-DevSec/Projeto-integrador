@@ -165,3 +165,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+// =========================================================================
+// 7. FILTRAGEM E LIMPEZA AVANÇADA DO HISTÓRICO
+// =========================================================================
+
+function filtrarHistoricoTela() {
+    const termoBusca = document.getElementById("busca-historico-id").value.toLowerCase();
+    const filtroPagamento = document.getElementById("busca-historico-pagamento").value;
+    const blocosDias = document.querySelectorAll(".bloco-dia");
+
+    blocosDias.forEach(bloco => {
+        const linhas = bloco.querySelectorAll(".linha-pedido-historico");
+        let linhasVisiveisNoDia = 0;
+
+        linhas.forEach(linha => {
+            const id = linha.getAttribute("data-id").toLowerCase();
+            const mesa = linha.getAttribute("data-mesa").toLowerCase();
+            const pagamento = linha.getAttribute("data-pagamento");
+
+            const bateIdOuMesa = id.includes(termoBusca) || mesa.includes(termoBusca);
+            const batePagamento = !filtroPagamento || pagamento === filtroPagamento;
+
+            if (bateIdOuMesa && batePagamento) {
+                linha.style.display = "";
+                linhasVisiveisNoDia++;
+            } else {
+                linha.style.display = "none";
+            }
+        });
+
+        // Se nenhum pedido do dia bateu com o filtro, esconde o título do dia inteiro
+        if (linhasVisiveisNoDia === 0) {
+            bloco.style.display = "none";
+        } else {
+            bloco.style.display = "";
+        }
+    });
+}
+
+function limparHistoricoGeral() {
+    const confirmacao = confirm("⚠️ ATENÇÃO!\n\nEsta ação irá apagar permanentemente todos os pedidos concluídos e cancelados do banco de dados.\n\nUm relatório consolidado em PDF será gerado e baixado automaticamente no seu PC como backup.\n\nDeseja prosseguir?");
+    
+    if (confirmacao) {
+        // Redireciona a janela para a rota de download. O navegador baixa o arquivo automaticamente.
+        window.location.href = '/admin/historico/limpar-e-exportar';
+        
+        // Dá um pequeno tempo para o download iniciar e recarrega a tela para limpar a visualização
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+    }
+}
