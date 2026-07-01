@@ -43,7 +43,7 @@ def admin_criar():
     senha = request.form.get('senha')
     cargo = request.form.get('cargo') 
 
-    # Mapeia as opções literais do formulário HTML para os escopos de RBAC do sistema
+    # Mapeia as opções literais do formulário HTML para os escopes de RBAC do sistema
     cargo_map = {
         'Gerente': 'admin',
         'Estoquista': 'estoquista',
@@ -146,14 +146,12 @@ def limpar_historico_pdf():
 
     from app import db, Pedido
     try:
-        # Coleta os registros históricos elegíveis para expurgo (Concluídos e Cancelados)
         pedidos = Pedido.query.filter(Pedido.status.in_(['Concluído', 'Cancelado'])).order_by(Pedido.data_hora.desc()).all()
         
         if not pedidos:
             flash('Não existem registros no histórico para exportação.', 'erro')
             return redirect(url_for('admin.admin_panel'))
 
-        # Inicializa o buffer binário para construir o documento na memória RAM antes do download
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
         elementos = []
@@ -165,7 +163,6 @@ def limpar_historico_pdf():
         elementos.append(Paragraph(f"Backup de Histórico extraído em: {datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}", styles['Normal']))
         elementos.append(Spacer(1, 20))
         
-        # Estruturação e modelagem matricial da tabela de dados do relatório
         dados_tabela = [['ID Pedido', 'Data / Hora', 'Atendimento', 'Forma Pagto', 'Status', 'Valor Total']]
         for p in pedidos:
             local = f"Mesa {p.numero_mesa}" if p.numero_mesa else "Balcão"
@@ -191,12 +188,10 @@ def limpar_historico_pdf():
         elementos.append(tabela)
         doc.build(elementos)
         
-        # Purga segura dos registros do banco após a validação estrutural do PDF
         for p in pedidos:
             db.session.delete(p)
         db.session.commit()
         
-        # Retrocede o ponteiro do stream binário para transmissão via HTTP
         buffer.seek(0)
         response = make_response(buffer.getvalue())
         response.headers['Content-Type'] = 'application/pdf'
@@ -205,26 +200,27 @@ def limpar_historico_pdf():
 
     except Exception as e:
         db.session.rollback()
-        print(f"Erro crítico no expurgo e backup de dados: {e}")
-        flash("Erro ao processar a exclusão e geração do backup no banco de dados.", "erro")
+        print(f"Erro crítico no expurgo do histórico: {e}")
+        flash("Erro ao processar a exclusão e geração do backup.", "erro")
         return redirect(url_for('admin.admin_panel'))
-    
-    @admin_bp.route('/admin/caixa/zerar-e-exportar')
+
+
+# --- ROTA DE AUDITORIA: FECHAMENTO E ZERAGEM DO CAIXA DIÁRIO (Apenas Gerente) ---
+
+@admin_bp.route('/admin/caixa/zerar-e-exportar')
 def zerar_caixa_pdf():
     if session.get('nivel_acesso') != 'admin':
-        flash('Acesso negado!', 'erro')
+        flash('Acesso negado! Apenas gerentes podem fechar o caixa.', 'erro')
         return redirect(url_for('vendas.index'))
 
     from app import db, Pedido
     try:
-        # Coleta os pedidos concluídos do caixa atual
         pedidos = Pedido.query.filter_by(status='Concluído').order_by(Pedido.data_hora.asc()).all()
         
         if not pedidos:
             flash('Não há vendas registradas no caixa atual para fechamento.', 'erro')
-            return redirect(url_for('vendas.index'))
+            return redirect(url_for('admin.admin_panel'))
 
-        # Consolidação financeira por método de pagamento para o cabeçalho do PDF
         total_geral = 0
         resumo_metodos = {'Dinheiro': 0.0, 'Pix': 0.0, 'Cartão de Crédito': 0.0, 'Cartão de Débito': 0.0}
         
@@ -233,7 +229,6 @@ def zerar_caixa_pdf():
             if p.forma_pagamento in resumo_metodos:
                 resumo_metodos[p.forma_pagamento] += float(p.total)
 
-        # Geração do documento PDF na memória RAM
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
         elementos = []
@@ -246,14 +241,12 @@ def zerar_caixa_pdf():
         elementos.append(Paragraph(f"Data de Emissão: {datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}", styles['Normal']))
         elementos.append(Spacer(1, 15))
         
-        # Bloco consolidado de faturamento por método no PDF
         elementos.append(Paragraph("<b>RESUMO DE FATURAMENTO POR MÉTODO:</b>", styles['Normal']))
         for metodo, valor in resumo_metodos.items():
             elementos.append(Paragraph(f"• {metodo}: R$ {valor:.2f}", estilo_sub))
         elementos.append(Paragraph(f"<b>FATURAMENTO TOTAL DO TURNO: R$ {total_geral:.2f}</b>", styles['Normal']))
         elementos.append(Spacer(1, 20))
         
-        # Tabela analítica de auditoria de pedidos
         dados_tabela = [['ID Pedido', 'Horário', 'Atendimento', 'Forma Pagto', 'Valor']]
         for p in pedidos:
             local = f"Mesa {p.numero_mesa}" if p.numero_mesa else "Balcão"
@@ -272,7 +265,6 @@ def zerar_caixa_pdf():
         elementos.append(tabela)
         doc.build(elementos)
         
-        # Altera o status dos pedidos para 'Arquivado' ou remove-os para zerar o caixa ativo
         for p in pedidos:
             db.session.delete(p)
         db.session.commit()
@@ -287,4 +279,4 @@ def zerar_caixa_pdf():
         db.session.rollback()
         print(f"Erro no fechamento do caixa: {e}")
         flash("Erro operacional ao tentar fechar o caixa.", "erro")
-        return redirect(url_for('vendas.index'))
+        return redirect(url_for('admin.admin_panel'))
