@@ -26,30 +26,39 @@ def index():
                 "id": ped.id,
                 "forma_pagamento": ped.forma_pagamento,
                 "total": float(ped.total),
-                "numero_mesa": ped.numero_mesa,  # Repassa o número da mesa para a cozinha
+                "numero_mesa": ped.numero_mesa,
+                "itens": [{"quantidade": i.quantidade, "nome": i.produto.nome} for i in ped.itens]
+            })
+            
+        # 2.5 BUSCA PEDIDOS PRONTOS (ESTEIRA DE ANDAMENTO / ENTREGA)
+        pedidos_andamento_banco = Pedido.query.filter_by(status='Pronto para retirada').all()
+        pedidos_andamento = []
+        for ped in pedidos_andamento_banco:
+            pedidos_andamento.append({
+                "id": ped.id,
+                "forma_pagamento": ped.forma_pagamento,
+                "total": float(ped.total),
+                "numero_mesa": ped.numero_mesa,
                 "itens": [{"quantidade": i.quantidade, "nome": i.produto.nome} for i in ped.itens]
             })
         
         # 3. BARREIRA DE SEGURANÇA: BUSCA HISTÓRICO APENAS SE FOR GERENTE (ADMIN)
         lista_historico_agrupada = []
         if session.get('nivel_acesso') == 'admin':
-            # Traz tanto concluídos quanto cancelados ordenados dos mais recentes para os mais antigos
             pedidos_historico_banco = Pedido.query.filter(Pedido.status.in_(['Concluído', 'Cancelado'])).order_by(Pedido.data_hora.desc()).all()
             
             historico_por_dia = defaultdict(list)
             for ped in pedidos_historico_banco:
-                # Cria a chave do grupo por data (DD/MM/AAAA)
                 dia = ped.data_hora.strftime('%d/%m/%Y')
                 historico_por_dia[dia].append({
                     "id": ped.id,
                     "total": float(ped.total),
-                    "data_hora": ped.data_hora.strftime('%H:%M'),  # Exibe apenas o horário dentro do grupo
+                    "data_hora": ped.data_hora.strftime('%H:%M'),
                     "pagamento": ped.forma_pagamento,
                     "numero_mesa": ped.numero_mesa,
                     "status": ped.status
                 })
             
-            # Ordena os blocos de dias de forma decrescente para o Jinja2
             lista_historico_agrupada = sorted(
                 historico_por_dia.items(), 
                 key=lambda x: datetime.strptime(x[0], '%d/%m/%Y'), 
@@ -60,6 +69,7 @@ def index():
             'projeto.html', 
             produtos=produtos_reais, 
             pedidos_pendentes_fake=pedidos_cozinha,
+            pedidos_andamento=pedidos_andamento, # Envia os pedidos prontos para retirada
             pedidos_historico=lista_historico_agrupada
         )
         
@@ -87,10 +97,8 @@ def criar_pedido():
         if not forma_pagamento or not itens_carrinho:
             return jsonify({"erro": "Preencha a forma de pagamento e adicione itens."}), 400
 
-        # Sanitização do input da mesa: se vazio ou nulo, armazena como None (Balcão)
         mesa_final = int(numero_mesa) if numero_mesa else None
 
-        # Instancia o pedido guardando a mesa tratada
         novo_pedido = Pedido(
             data_hora=datetime.now(), 
             total=0, 
@@ -160,7 +168,6 @@ def detalhes_pedido(pedido_id):
 
 @vendas_bp.route('/caixa/resumo')
 def caixa_resumo():
-    # BARREIRA DE SEGURANÇA RBAC: Apenas o Gerente (admin) pode auditar o faturamento
     if session.get('nivel_acesso') != 'admin':
         return jsonify({"erro": "Acesso não autorizado. Área restrita a gerentes."}), 403
         

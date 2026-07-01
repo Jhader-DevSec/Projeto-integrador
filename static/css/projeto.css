@@ -127,7 +127,6 @@ nav a:hover {
     color: var(--botao-e-icone);
 }
 
-/* Estilo para a aba que está ativa no momento */
 nav a.active {
     color: var(--botao-e-icone) !important;
     border-bottom: 2px solid var(--botao-e-icone);
@@ -135,7 +134,7 @@ nav a.active {
 }
 
 /* ===================================================
-   4. A JANELA VISÍVEL E O TRILHO
+   4. A JANELA VISÍVEL E O TRILHO (ATUALIZADO PARA 5 ABAS)
    =================================================== */
 main {
     flex: 1;
@@ -146,7 +145,7 @@ main {
 
 .rail {
     display: flex;
-    width: 400%;
+    width: 500%; /* 🔥 Expandido de 400% para 500% devido à nova aba */
     height: 100%;
     transition: transform 0.5s ease-in-out;
 }
@@ -339,9 +338,9 @@ main {
 }
 
 /* ===================================================
-   8. OS CARDS DA COZINHA (Aba Cozinha)
+   8. CARDS DA COZINHA E DE ANDAMENTO (COMPARTILHADO)
    =================================================== */
-.cozinha {
+.cozinha, .andamento {
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
@@ -396,7 +395,7 @@ main {
     border: none;
     padding: 12px;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -418,13 +417,24 @@ main {
     color: white;
 }
 
-.validacao_pedidos .btn_confirmar {
+.validacao_pedidos .btn_pronto_retirada {
+    background-color: #3d2b1d;
+    border: 1px solid var(--botao-e-icone);
+    color: #f5dfcb;
+}
+
+.validacao_pedidos .btn_pronto_retirada:hover {
+    background-color: var(--botao-e-icone);
+    color: white;
+}
+
+.validacao_pedidos .btn_concluir_entrega {
     background-color: #1d3d24;
     border: 1px solid #28a745;
     color: #c3e6cb;
 }
 
-.validacao_pedidos .btn_confirmar:hover {
+.validacao_pedidos .btn_concluir_entrega:hover {
     background-color: var(--sucesso);
     color: white;
 }
@@ -491,7 +501,7 @@ main {
 }
 
 /* ===================================================
-   10. DASHBOARD AVANÇADO DA ABA CAIXA (NOVO)
+   10. ABA CAIXA & FINANCEIRO
    =================================================== */
 .caixa {
     overflow-y: auto;

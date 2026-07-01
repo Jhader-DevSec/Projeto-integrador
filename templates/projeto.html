@@ -27,7 +27,7 @@
         <nav>
             <a href="#vendas">Vender</a>
             <a href="#cozinha">Cozinha</a>
-            {% if session['nivel_acesso'] == 'admin' %}
+            <a href="#andamento">Andamento</a> {% if session['nivel_acesso'] == 'admin' %}
                 <a href="#historico">Histórico</a>
                 <a href="#caixa">Caixa</a>
             {% endif %}
@@ -94,12 +94,39 @@
                     </ul>
                     <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
 
-                    <button class="btn_confirmar">
-                        <i class="fas fa-check" style="margin-right: 8px;"></i>Confirmar Conclusão
+                    <button class="btn_pronto_retirada">
+                        <i class="fas fa-fire-burner" style="margin-right: 8px;"></i>Pronto para Retirada
                     </button>
                     
                     <button class="btn_cancelar">
                         <i class="fas fa-xmark" style="margin-right: 8px;"></i>Cancelar Pedido
+                    </button>
+                </div>
+                {% endfor %}
+            </section>
+
+            <section class="andamento" id="andamento">
+                {% for pedido in pedidos_andamento %}
+                <div class="validacao_pedidos" data-id="{{ pedido.id }}">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px;">
+                        <span>Pedido #{{ pedido.id }}</span>
+                        <span style="color: #27AE60;">
+                            {% if pedido.numero_mesa %}📍 Mesa {{ pedido.numero_mesa }}{% else %}🛍️ Balcão{% endif %}
+                        </span>
+                    </div>
+                    <small style="color: #27AE60; display: block; margin-bottom: 10px; font-weight: bold;">⚡ Status: Pronto para Retirada</small>
+
+                    <ul>
+                        {% for item in pedido.itens %}
+                        <li>
+                            {{ item.quantidade }} x {{ item.nome }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <h3>Total: R$ {{ "%.2f"|format(pedido.total) }}</h3>
+
+                    <button class="btn_concluir_entrega">
+                        <i class="fas fa-check" style="margin-right: 8px;"></i>Confirmar Entrega (Concluir)
                     </button>
                 </div>
                 {% endfor %}

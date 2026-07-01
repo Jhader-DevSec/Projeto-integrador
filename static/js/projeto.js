@@ -28,9 +28,9 @@ window.filtrarHistoricoTela = function() {
         let linhasVisiveisNoDia = 0;
 
         linhas.forEach(linha => {
-            const id = linha.getAttribute("data-id").toLowerCase();
+            const id = Apparentemente = linha.getAttribute("data-id").toLowerCase();
             const mesa = linha.getAttribute("data-mesa").toLowerCase();
-            const pagamento = Apparentemente = linha.getAttribute("data-pagamento");
+            const pagamento = linha.getAttribute("data-pagamento");
 
             const bateIdOuMesa = id.includes(termoBusca) || mesa.includes(termoBusca);
             const batePagamento = !filtroPagamento || pagamento === filtroPagamento;
@@ -43,7 +43,6 @@ window.filtrarHistoricoTela = function() {
             }
         });
 
-        // Se nenhum pedido do dia correspondeu ao filtro, oculta o bloco diário inteiro
         if (linhasVisiveisNoDia === 0) {
             bloco.style.display = "none";
         } else {
@@ -170,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 5. CONTROLE DINÂMICO DOS BOTÕES DA ESTEIRA DA COZINHA
+    // 5. CONTROLE DINÂMICO DOS BOTÕES DAS ESTEIRAS (COZINHA E ANDAMENTO)
     function atualizarStatusPedidoNoBanco(id, statusAlvo, elementoCardDOM) {
         fetch(`/pedidos/${id}/status`, {
             method: 'POST',
@@ -192,13 +191,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    document.querySelectorAll(".btn_confirmar").forEach(btn => {
+    // Gatilho 1: Cozinheiro avança o pedido para a esteira de entrega
+    document.querySelectorAll(".btn_pronto_retirada").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const card = e.target.closest(".validacao_pedidos");
+            atualizarStatusPedidoNoBanco(card.dataset.id, "Pronto para retirada", card);
+        });
+    });
+
+    // Gatilho 2: Entregador/Garçom finaliza e encerra o ciclo de vida do pedido
+    document.querySelectorAll(".btn_concluir_entrega").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
             atualizarStatusPedidoNoBanco(card.dataset.id, "Concluído", card);
         });
     });
 
+    // Gatilho 3: Cancelamento de pedido em aberto
     document.querySelectorAll(".btn_cancelar").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const card = e.target.closest(".validacao_pedidos");
@@ -251,12 +260,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =========================================================================
-    // 7. GERENCIAMENTO DE ABAS ATIVAS (INDICADOR LARANJA)
+    // 7. GERENCIAMENTO DE ABAS ATIVAS E MOVIMENTAÇÃO DO TRILHO (5 SEÇÕES)
     // =========================================================================
     function gerenciarIndicadorAba() {
-        // Se a URL não tiver hash específico, assume a aba principal (#vendas)
         const hashAtual = window.location.hash || "#vendas";
+        
+        // Mapeia rigidamente a ordem física das abas para calcular o deslizamento
+        const abasOrdem = ["#vendas", "#cozinha", "#andamento", "#historico", "#caixa"];
+        const index = abasOrdem.indexOf(hashAtual);
+        
+        // Desliza a tela principal fisicamente no eixo X
+        const rail = document.querySelector(".rail");
+        if (rail && index !== -1) {
+            rail.style.transform = `translateX(-${index * 100}vw)`;
+        }
 
+        // Altera as tags ativas para laranja
         linksNavegacao.forEach(link => {
             if (link.getAttribute("href") === hashAtual) {
                 link.classList.add("active");
@@ -266,20 +285,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Monitora os cliques manuais nas abas do menu
     linksNavegacao.forEach(link => {
         link.addEventListener("click", () => {
             setTimeout(gerenciarIndicadorAba, 50);
         });
     });
 
-    // Inicializa a aba ativa na primeira carga do sistema
     gerenciarIndicadorAba();
-
-    // Sincroniza caso o usuário mude de tela pelos botões de avançar/voltar do navegador
     window.addEventListener("hashchange", gerenciarIndicadorAba);
     
-    // Fechamento básico de segurança do Modal clicando fora dele
     const modalHistorico = document.getElementById('modal-historico');
     if (modalHistorico) {
         modalHistorico.addEventListener('click', (e) => {
