@@ -1,307 +1,173 @@
-# 🍢 Espetinho do Edir — Sistema de Gestão Comercial e PDV
+# 🍢 Espetinho do Edir — Sistema Integrado de Gestão Comercial & PDV Reativo
 
-<p align="center">
-  <strong>Jhader Augusto</strong> — Líder Técnico do Projeto
-  <br>
-  Arquitetura Back-end • Flask • Engenharia de Regras de Negócio • Processos Front-end
-</p>
-
-<p align="center">
-  Desenvolvido em equipe com Pedro Neves, Camila Emanuelle e Arthur Luís
-</p>
-
----
-
-> 🚀 **Projeto Integrador / Trabalho Final de Curso (Em Desenvolvimento)**
+> **Enterprise Resource Planning (ERP) & Point of Sale (POS) System**
 >
-> Embora concebido como um projeto acadêmico para consolidação de conhecimentos, este sistema foi **planejado, estruturado e arquitetado para atender a uma operação comercial real**. Toda a especificação de requisitos e regras de negócio foi baseada nas necessidades práticas observadas diretamente em um comércio ativo, focado estritamente no gerenciamento interno da empresa.
-
-O sistema foi pensado sob medida para a operação de uma espetaria, abrangendo desde a frente de caixa reativa (PDV) até o fluxo operacional da cozinha e auditoria gerencial.
-
----
-
-# 📌 Objetivo do Projeto
-
-O objetivo principal do sistema é centralizar e otimizar o fluxo operacional interno de uma espetaria, reduzindo falhas humanas, melhorando o controle de estoque, automatizando processos de venda e facilitando a comunicação entre caixa, cozinha e gestão administrativa.
-
-O projeto também é utilizado como laboratório prático para aplicação de conceitos modernos de:
-
-- Arquitetura Back-end
-- Segurança de Aplicações (AppSec)
-- Organização modular de sistemas
-- Integração Front-end e Back-end
-- Controle de sessões e autenticação
-- Boas práticas de engenharia de software
+> Solução integrada de gestão comercial focada na otimização de faturamento, controle transacional de inventário e automação do fluxo operacional de ponta a ponta (Frente de Caixa, Cozinha e Controladoria). Desenvolvido sob uma arquitetura de componentes modulares em Flask, o sistema prioriza:
+> - Desacoplamento e Separação de Conceitos (SoC)
+> - Consistência Transacional Estrita
+> - Segurança via Controle de Acesso Baseado em Funções (RBAC)
+> - Comunicação Assíncrona Orientada a APIs REST
 
 ---
 
-# 🛠️ Tecnologias e Ferramentas
+## 🎯 Escopo da Solução
 
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+O Espetinho do Edir gerencia o ciclo de vida completo da operação comercial em tempo real:
+1. **Frente de Caixa (PDV):** Captura e processamento imediato de vendas.
+2. **Camada de Validação:** Verificação server-side automatizada de inventário em tempo de execução.
+3. **Orquestração de Produção:** Despacho dinâmico de pedidos para a linha de preparação.
+4. **Sincronização de Status:** Atualização de prontidão e entrega sem latência.
+5. **Auditoria e Controladoria:** Consolidação e fechamento financeiro imediato para a gestão.
 
----
-
-# 👥 Equipe & Estrutura de Desenvolvimento
-
-O projeto está sendo desenvolvido de forma colaborativa, com divisão estratégica das responsabilidades conforme a especialidade técnica de cada integrante.
-
-| Integrante | Responsabilidades |
-|---|---|
-| **Jhader Augusto** | Liderança técnica, arquitetura do sistema, desenvolvimento Back-end com Flask, engenharia de regras de negócio, segurança da aplicação e integração dos processos Front-end |
-| **Pedro Neves** | Estruturação do Back-end, apoio na arquitetura do sistema e desenvolvimento da lógica da aplicação |
-| **Camila Emanuelle** | Interface visual, estilização da aplicação, experiência do usuário e interatividade Front-end com CSS e JavaScript |
-| **Arthur Luís** | Concepção técnica inicial, mapeamento e desenvolvimento da etapa de prototipação estrutural do site. |
+A arquitetura foi projetada com foco em alta disponibilidade de lógica e isolamento de processos, garantindo a manutenibilidade e a escalabilidade do ecossistema.
 
 ---
 
-# 💼 Validação no Mundo Real & Diferencial Prático
+## 🛠️ Stack Tecnológica
 
-Diferente de projetos acadêmicos puramente teóricos, o desenvolvimento do sistema foi guiado por um mapeamento de processos reais observados em uma operação comercial ativa.
-
-## Principais diferenciais implementados:
-
-- Controle de estoque reativo em tempo real
-- Bloqueio automático de vendas acima do estoque disponível
-- Ocultação dinâmica de produtos esgotados
-- Integração operacional entre PDV e cozinha
-- Estrutura administrativa isolada do operador de caixa
-- Fluxo de cancelamento com estorno automático de insumos
-- Controle de acesso por nível de privilégio (RBAC)
+* **Backend:** Python 3.11+, Flask (Blueprint Architecture), SQLAlchemy ORM.
+* **Frontend:** HTML5 Engine, Jinja2 Template Injection, JavaScript ES6+ (Fetch API), CSS Composto Modular.
+* **Infraestrutura:** Ambientes isolados (Virtualenv), manifesto de dependências (`requirements.txt`), pronto para deploy automatizado em ambientes Linux / VPS / Cloud.
 
 ---
 
-# 🛡️ Boas Práticas e Engenharia Aplicada
+## 📐 Engenharia e Arquitetura de Software
 
-Buscamos aplicar conceitos arquiteturais e de infraestrutura próximos aos encontrados em ambientes corporativos reais:
+A aplicação foi estruturada em camadas desacopladas utilizando o padrão Flask Blueprints para eliminar gargalos de código e facilitar o desenvolvimento paralelo:
 
-- Estruturação modular de pacotes (`templates`, `static`, `routes`)
-- Uso de ambientes virtuais (`venv`) para isolamento e reprodutibilidade do ecossistema
-- Controle de dependências e pacotes via `requirements.txt`
-- Organização desacoplada de rotas utilizando Flask Blueprints
-- Implementação de proteção contra ataques automatizados de força bruta com `Flask-Limiter`
-- Separação entre camada visual (View) e lógica de negócio (Controller)
-- Planejamento de criptografia e hashing seguro de credenciais com `Bcrypt`
-- Isolamento de chaves e credenciais sensíveis através de variáveis de ambiente (`.env`)
+* **Controladores de Rotas (Controllers):** Isolamento de endpoints e segmentação das regras de negócio por contexto operacional.
+* **Camada de Serviço (Core Logic):** Motores de processamento de dados, validações e regras transacionais internas.
+* **Persistência de Dados (Data Layer):** Abstração de banco de dados orientada a objetos via ORM, mitigando o acoplamento direto com o motor SQL.
+* **Interface Reativa (User Interface):** Renderização dinâmica server-side otimizada com Jinja2 combinada a componentes reativos via JavaScript assíncrono.
 
 ---
 
-# 🔐 Segurança da Aplicação
+## 💼 Módulos Funcionais e Recursos
 
-Mesmo em fase de prototipagem, o projeto incorpora preocupações rigorosas relacionadas à segurança da informação em aplicações web.
+### Ponto de Venda (PDV)
+* Lógica orientada a eventos (*event-driven UI*) para agilidade no atendimento ao cliente.
+* Bloqueios nativos na interface e validação *server-side* concorrente para impedir vendas sem estoque físico.
 
-## Medidas já implementadas:
+### Gestão de Produção (Cozinha)
+* Painel operacional alimentado por requisições assíncronas assentes em endpoints REST.
+* Monitorização activa de status (Fila, Preparo, Concluído) com atualização em tempo real para controle de tempo de resposta.
 
-- Controle e validação de estado de sessão via `flask.session`
-- Bloqueio de rotas administrativas para usuários sem privilégios gerenciais (RBAC)
-- Rate-limiting acoplado ao endereço IP do cliente (`get_remote_address`) para mitigação de ataques de força bruta
-- Configuração refinada do `.gitignore` para evitar vazamento de binários e arquivos locais
+### Controle de Inventário Automatizado
+* Dedução dinâmica de insumos vinculada diretamente ao fechamento da venda no PDV.
+* Mecanismos de *rollback* e estorno automatizado de estoque em caso de cancelamento de itens ou quebra de fluxo.
 
-## Roadmap de segurança:
-
-- Implementação de hash criptográfico de senhas via `Bcrypt`
-- Migração da persistência em memória para banco de dados relacional
-- Implementação de proteção contra ataques CSRF
-- Hardening da autenticação
-- Expansão do controle de sessões
-
----
-
-# 📱 Demonstração da Interface (Preview)
-
-https://github.com/user-attachments/assets/ff3a1f2a-03f1-4ea8-906f-8902d1cf588f
-
-<p align="center">
-  <img src="static/img/logo.png" alt="Espetinho do Edir" width="160px">
-</p>
+### Auditoria Financeira & Business Intelligence
+* Agregação e consolidação inteligente de faturamento segmentado por meio de pagamento (PIX, Crédito, Débito, Dinheiro).
+* Histórico completo e imutável de transações para auditorias de caixa e prevenção de fraudes.
 
 ---
 
-# 🔐 Credenciais de Teste
+## 🔐 Matriz de Permissões (RBAC)
 
-Para navegação entre os módulos do sistema durante a homologação local:
+O controle de privilégios de acesso é validado ao nível do servidor, restringindo a exposição de dados críticos de acordo com a função do colaborador:
 
-| Perfil | Usuário | Senha |
-|---|---|---|
-| **Administrador / Gerente** | `admin@brasas.com` | `senha123` |
-| **Operador de Caixa / PDV** | `teste@brasas.com` | `123456` |
-
----
-
-# 🧠 Desafios Técnicos & Aprendizados
-
-## 1. Modularização da Aplicação
-
-### Desafio:
-Evitar acoplamento excessivo e arquivos monolíticos contendo toda a lógica de autenticação, vendas e administração.
-
-### Solução:
-Implementação de Flask Blueprints, distribuindo o fluxo em controladores especializados e independentes dentro do diretório `routes/`.
+| Módulo / Endpoint | Administrador | Estoquista | Operador (Venda) |
+| :--- | :---: | :---: | :---: |
+| **Gestão de Usuários / Permissões** | Acesso Total | ❌ | ❌ |
+| **Fechamento e Auditoria de Caixa** | Acesso Total | ❌ | ❌ |
+| **Modificação de Preços e Catálogo** | Acesso Total | Escrita Parcial | ❌ |
+| **Linha de Produção (Cozinha)** | Supervisão | ❌ | Atualização de Status |
+| **Terminal de Vendas (PDV)** | Permitido | Permitido | Permitido |
 
 ---
 
-## 2. Sincronização de Estoque em Tempo Real
+## 🛡️ Segurança Aplicada (Application Security - AppSec)
 
-### Desafio:
-Impedir vendas acima do estoque físico disponível sem sobrecarregar o servidor com múltiplas requisições HTTP síncronas.
+O desenvolvimento da solução considerou controles e mitigações alinhados às diretrizes globais do OWASP Top 10:
 
-### Solução:
-Injeção de metadados estruturados no DOM (`data-estoque`, `data-preco`) consumidos dinamicamente por funções em JavaScript Vanilla (ES6), responsáveis pelas validações reativas diretamente na interface.
-
----
-
-## 3. Controle de Acesso e Sessões
-
-### Desafio:
-Garantir que usuários comuns não consigam acessar rotas administrativas manipulando URLs manualmente.
-
-### Solução:
-Implementação de validação ativa de sessões e controle de privilégios utilizando `flask.session`.
+* **State and Session Management:** Controle de sessão eamp; persistência de identidade criptografada via `flask.session`.
+* **Broken Object Level Authorization (BOLA) Mitigation:** Validação server-side de privilégios em cada endpoint administrativo, impedindo desvios de acesso por manipulação direta de URLs.
+* **Integridade Transacional:** Rollback automático de transações em cenários de interrupção ou falha de rede para evitar corrupção de registros.
+* **Secrets Management:** Isolamento estrito de chaves criptográficas e variáveis de ambiente usando arquivos de configuração `.env`.
+* **Data Protection:** Lógica nativa preparada para persistência de credenciais sob criptografia de via única (*Hashing* via `bcrypt`).
 
 ---
 
-# 🔄 Fluxo do Carrinho de Vendas
+## 🧠 Soluções para Desafios de Engenharia
 
-```mermaid
-graph TD
-    A[Clique no Botão +] --> B{Qtd Atual < data-estoque?}
-    B -- Sim --> C[Incrementa Quantidade]
-    B -- Não --> D[Dispara Alerta de Bloqueio]
-    C --> E[JavaScript recalcula valores]
-    E --> F[Atualiza Total do Pedido]
-```
+### 1. Consistência e Estado Síncrono sem Latência
+Desenvolvimento de uma arquitetura assíncrona no front-end para comunicação reativa entre o operador do caixa e a equipe de produção. Garante que os dados financeiros e operacionais permaneçam idênticos em todas as frentes de trabalho sem a necessidade de recarregar a interface.
+
+### 2. Concorrência e Conflitos de Inventário
+Implementação de regras transacionais para mitigar a concorrência de requisições simultâneas, impedindo que múltiplos operadores consumam o mesmo produto físico além do limite real do inventário.
+
+### 3. Eliminação de Monolitos de Código
+Refatoração intensiva para migrar rotas acopladas para módulos isolados, gerando uma base de código limpa, passível de testes unitários e de fácil manutenção por equipas de desenvolvimento.
 
 ---
 
-# 📂 Estrutura Base do Projeto
+## 📂 Estrutura do Repositório
 
-```plaintext
+```text
 espetinho-do-edir/
 │
-├── routes/                  # Camada de Controladores (Blueprints Modularizados)
-│   ├── __init__.py
-│   ├── admin.py             # Painel administrativo e gerenciamento interno
-│   ├── auth.py              # Login, autenticação e sessões
-│   └── vendas.py            # Regras da frente de caixa (PDV)
-│
-├── static/                  # Arquivos estáticos globais
-│   ├── css/
-│   ├── img/
-│   ├── js/
-│   └── mp4/
-│
-├── templates/               # Templates Jinja2
-│   ├── admin_page.html
-│   ├── login_page.html
-│   └── projeto.html
-│
-├── app.py                   # Inicializador principal da aplicação
-├── banco.py                 # Persistência de dados em memória
-├── requirements.txt         # Dependências do projeto
-└── README.md
+├── routes/          # Camada de Controladores (Blueprints desacoplados por módulo)
+├── static/          # Ativos de Performance da Aplicação (JS Moderno, CSS Estruturado)
+├── templates/       # Camada de Visualização (Engine Jinja2)
+├── app.py           # Orquestrador Central e Inicialização do Servidor
+├── requirements.txt # Manifesto de Dependências do Ambiente
+└── README.md        # Documentação Técnica do Sistema
 ```
 
 ---
 
-# 🚧 Roadmap do Projeto
+## 🚀 Guia de Instalação e Execução Local
 
-## 🔙 Back-end
-
-- [ ] Integração com banco de dados relacional SQL (SQLAlchemy / PostgreSQL)
-- [ ] Sistema de persistência permanente de pedidos
-- [ ] Implementação de API REST interna
-- [ ] Geração de logs administrativos e auditoria gerencial
-
-## 🎨 Front-end
-
-- [ ] Ajustes e testes de responsividade
-- [ ] Painel avançado de cozinha
-- [ ] Feedback visual síncrono de pedidos
-- [ ] Dashboard gerencial com métricas financeiras
-
-## 🛡️ Segurança
-
-- [ ] Variáveis de ambiente (`.env`)
-- [ ] Hardening da autenticação
-- [ ] Proteção CSRF
-- [ ] Controle avançado de sessões
-- [ ] Hash seguro de credenciais com Bcrypt
-
----
-
-# 🚀 Como Executar o Projeto Localmente
-
-Certifique-se de possuir o Python 3.11 ou superior instalado em sua máquina.
-
-## 1. Clone o repositório
+Clonar o repositório e aceder ao diretório mestre:
 
 ```bash
 git clone https://github.com/Jhader-DevSec/Projeto-integrador.git
 cd Projeto-integrador
 ```
 
-## 2. Configure e ative o ambiente virtual
+Provisionar e ativar o ambiente virtual isolado (Venv):
 
-### Windows (PowerShell / CMD)
+* **Em sistemas Linux/macOS:**
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate
+  ```
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
+* **Em sistemas Windows (Prompt de Comando):**
+  ```cmd
+  python -m venv .venv
+  .venv\Scripts\activate
+  ```
 
-### Linux / MacOS
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-## 3. Instale as dependências
+Instalar dependências listadas e iniciar o servidor de aplicação:
 
 ```bash
 pip install -r requirements.txt
-```
-
-## 4. Execute o servidor Flask
-
-```bash
 python app.py
 ```
 
-## 5. Acesse no navegador
-
-```bash
-http://127.0.0.1:5000
-```
+> **Acesso Local:** Abra o navegador e aceda ao endereço [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ---
 
-# 📚 Aprendizados Obtidos
+## 🗺️ Roadmap de Desenvolvimento e Próximas Atualizações
 
-Durante o desenvolvimento do projeto, foram aprofundados conhecimentos em:
+### Core & Infraestrutura
+- [x] Modularização completa do backend via Blueprints.
+- [ ] Implementação de logs estruturados em formato JSON para auditoria corporativa.
+- [ ] Camada de cache em memória para otimização de consultas de alto tráfego.
 
-- Arquitetura de aplicações Flask
-- Engenharia de software
-- Segurança de aplicações web
-- Estruturação modular
-- Integração Front-end e Back-end
-- Manipulação dinâmica do DOM
-- Controle de sessão
-- Organização colaborativa de projetos
+### Application Security (AppSec)
+- [ ] Integração de encriptação robusta de senhas via bcrypt.
+- [ ] Implementação de tokens de validação contra ataques CSRF.
+- [ ] Configuração de políticas estritas de segurança de cabeçalhos HTTP.
 
----
-
-# 📌 Status do Projeto
-
-🚧 Projeto em desenvolvimento contínuo.
-
-Atualmente em fase de expansão da arquitetura, melhoria de segurança e implementação de persistência de dados.
+### Client Side / UX
+- [ ] Refatoração da biblioteca de scripts para módulos puros ES6.
+- [ ] Dashboard gerencial avançado com suporte a gráficos analíticos responsivos.
 
 ---
 
-# 📄 Licença
+## 📄 Licença
 
-Projeto desenvolvido para fins educacionais e de composição de portfólio técnico.
+Este software é distribuído sob os termos da licença MIT. Para mais detalhes, consulte o arquivo `LICENSE`.
