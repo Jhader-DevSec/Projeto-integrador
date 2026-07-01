@@ -127,6 +127,13 @@ nav a:hover {
     color: var(--botao-e-icone);
 }
 
+/* Estilo para a aba que está ativa no momento */
+nav a.active {
+    color: var(--botao-e-icone) !important;
+    border-bottom: 2px solid var(--botao-e-icone);
+    padding-bottom: 4px;
+}
+
 /* ===================================================
    4. A JANELA VISÍVEL E O TRILHO
    =================================================== */

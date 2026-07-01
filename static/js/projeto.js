@@ -30,7 +30,7 @@ window.filtrarHistoricoTela = function() {
         linhas.forEach(linha => {
             const id = linha.getAttribute("data-id").toLowerCase();
             const mesa = linha.getAttribute("data-mesa").toLowerCase();
-            const pagamento = linha.getAttribute("data-pagamento");
+            const pagamento = Apparentemente = linha.getAttribute("data-pagamento");
 
             const bateIdOuMesa = id.includes(termoBusca) || mesa.includes(termoBusca);
             const batePagamento = !filtroPagamento || pagamento === filtroPagamento;
@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnFecharPedido = document.getElementById("btn-fechar-pedido");
     const selectPagamento = document.getElementById("metodo-pagamento");
     const inputMesa = document.getElementById("numero-mesa");
+    const linksNavegacao = document.querySelectorAll("nav a");
 
     // 2. FUNÇÃO MATEMÁTICA (CALCULAR O TOTAL DO PEDIDO)
     function atualizarValorTotal() {
@@ -139,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const idProduto = card.getAttribute("data-id");
                 const quantidade = parseInt(card.querySelector(".qtd-item").textContent);
                 if (quantidade > 0) {
-                    itensCarrinho.push({ id: idProduto, quantity: quantidade, quantidade: quantidade });
+                    itensCarrinho.push({ id: idProduto, quantidade: quantidade });
                 }
             });
 
@@ -248,6 +249,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (linkCaixa) {
         linkCaixa.addEventListener('click', carregarDadosResumoCaixa);
     }
+
+    // =========================================================================
+    // 7. GERENCIAMENTO DE ABAS ATIVAS (INDICADOR LARANJA)
+    // =========================================================================
+    function gerenciarIndicadorAba() {
+        // Se a URL não tiver hash específico, assume a aba principal (#vendas)
+        const hashAtual = window.location.hash || "#vendas";
+
+        linksNavegacao.forEach(link => {
+            if (link.getAttribute("href") === hashAtual) {
+                link.classList.add("active");
+            } else {
+                link.classList.remove("active");
+            }
+        });
+    }
+
+    // Monitora os cliques manuais nas abas do menu
+    linksNavegacao.forEach(link => {
+        link.addEventListener("click", () => {
+            setTimeout(gerenciarIndicadorAba, 50);
+        });
+    });
+
+    // Inicializa a aba ativa na primeira carga do sistema
+    gerenciarIndicadorAba();
+
+    // Sincroniza caso o usuário mude de tela pelos botões de avançar/voltar do navegador
+    window.addEventListener("hashchange", gerenciarIndicadorAba);
     
     // Fechamento básico de segurança do Modal clicando fora dele
     const modalHistorico = document.getElementById('modal-historico');
