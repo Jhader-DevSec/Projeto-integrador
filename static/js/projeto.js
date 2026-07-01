@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        btnMenos.addEventListener('click', () => {
+        txtQuantidade && btnMenos.addEventListener('click', () => {
             let qtdAtual = parseInt(txtQuantidade.textContent);
             if (qtdAtual > 0) {
                 qtdAtual--;
@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 6. DASHBOARD FINANCEIRO ASYNC: MONITORAMENTO DA ABA CAIXA
+    // 6. DASHBOARD FINANCEIRO ASYNC: BUSCA ATIVA DOS VALORES EM R$
     function carregarDadosResumoCaixa() {
         fetch('/caixa/resumo')
         .then(res => res.json())
@@ -251,31 +251,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const linkCaixa = document.querySelector('a[href="#caixa"]');
-    if (linkCaixa) {
-        linkCaixa.addEventListener('click', carregarDadosResumoCaixa);
-    }
-
     // =========================================================================
-    // 7. GERENCIAMENTO DE ABAS ATIVAS E MOVIMENTAÇÃO DINÂMICA DO TRILHO
+    // 7. MOTOR DE NAVEGAÇÃO INTERNA DINÂMICA (ANTI-DUPLO CLIQUES 🛠️)
     // =========================================================================
     function gerenciarIndicadorAba() {
         const hashAtual = window.location.hash || "#vendas";
         
-        // 🔥 INTELIGÊNCIA DE DESLIZAMENTO: Mapeia dinamicamente a posição física real
+        // Pega as seções físicas reais que existem na tela para o perfil logado
         const secoesVisiveis = Array.from(document.querySelectorAll(".rail section"));
         const idAlvo = hashAtual.replace("#", "");
         const secaoAlvo = document.getElementById(idAlvo);
+        
+        // Se a aba selecionada for o Caixa, dispara o carregamento financeiro de forma inteligente
+        if (hashAtual === "#caixa") {
+            carregarDadosResumoCaixa();
+        }
         
         if (secaoAlvo) {
             const indexReal = secoesVisiveis.indexOf(secaoAlvo);
             const rail = document.querySelector(".rail");
             if (rail && indexReal !== -1) {
+                // Aplica o slide no local exato e calibrado
                 rail.style.transform = `translateX(-${indexReal * 100}vw)`;
             }
         }
 
-        // Ilumina o link ativo no menu superior
+        // Atualiza a iluminação laranja do menu
         linksNavegacao.forEach(link => {
             if (link.getAttribute("href") === hashAtual) {
                 link.classList.add("active");
@@ -285,15 +286,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // 🔥 CORREÇÃO: Intercepta o clique para evitar a rolagem nativa e conflitos
     linksNavegacao.forEach(link => {
-        link.addEventListener("click", () => {
-            setTimeout(gerenciarIndicadorAba, 50);
+        link.addEventListener("click", (e) => {
+            e.preventDefault(); // Cancela o pulo nativo do navegador
+            const targetHash = link.getAttribute("href");
+            
+            // Altera o histórico da URL sem disparar o foco de rolagem vertical/horizontal
+            history.pushState(null, null, targetHash);
+            
+            // Executa a transição suave de primeira
+            gerenciarIndicadorAba();
         });
     });
 
+    // Inicializa a aba ativa no primeiro carregamento
     gerenciarIndicadorAba();
+
+    // Mantém a sincronia total caso usem as setas avançar/voltar do navegador
     window.addEventListener("hashchange", gerenciarIndicadorAba);
     
+    // Fechamento básico de segurança do Modal clicando fora dele
     const modalHistorico = document.getElementById('modal-historico');
     if (modalHistorico) {
         modalHistorico.addEventListener('click', (e) => {
